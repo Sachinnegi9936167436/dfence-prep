@@ -1,0 +1,37 @@
+[2026-03-20T12:11:09.141Z] User found: negisakshi032@gmail.com. Role: undefined
+[2026-03-20T12:11:09.141Z] Input password length: 10
+[2026-03-20T12:11:09.142Z] Login failed: Invalid credentials for negisakshi032@gmail.com
+[2026-03-20T12:11:09.835Z] User found: negisakshi032@gmail.com. Role: undefined
+[2026-03-20T12:11:09.835Z] Input password length: 10
+[2026-03-20T12:11:09.835Z] Login failed: Invalid credentials for negisakshi032@gmail.com
+[2026-03-20T12:11:10.175Z] User found: negisakshi032@gmail.com. Role: undefined
+[2026-03-20T12:11:10.176Z] Input password length: 10
+[2026-03-20T12:11:10.176Z] Login failed: Invalid credentials for negisakshi032@gmail.com
+[2026-03-20T12:11:46.395Z] User found: negisakshi032@gmail.com. Role: undefined
+[2026-03-20T12:11:46.396Z] Input password length: 10
+[2026-03-20T12:11:46.396Z] Login failed: Invalid credentials for negisakshi032@gmail.com
+[2026-03-20T12:12:48.290Z] User object keys: _id, email, name, score, quizzesAttempted, createdAt, __v, role, password
+[2026-03-20T12:12:48.291Z] User found: negisakshi032@gmail.com. Role: undefined. HasPass: false
+[2026-03-20T12:12:48.291Z] Input password length: 10
+[2026-03-20T12:12:48.292Z] Login failed: Invalid credentials for negisakshi032@gmail.com
+[2026-03-20T12:12:49.009Z] User object keys: _id, email, name, score, quizzesAttempted, createdAt, __v, role, password
+[2026-03-20T12:12:49.009Z] User found: negisakshi032@gmail.com. Role: undefined. HasPass: false
+[2026-03-20T12:12:49.010Z] Input password length: 10
+[2026-03-20T12:12:49.010Z] Login failed: Invalid credentials for negisakshi032@gmail.com
+[2026-03-20T12:12:49.509Z] User object keys: _id, email, name, score, quizzesAttempted, createdAt, __v, role, password
+[2026-03-20T12:12:49.510Z] User found: negisakshi032@gmail.com. Role: undefined. HasPass: false
+[2026-03-20T12:12:49.510Z] Input password length: 10
+[2026-03-20T12:12:49.510Z] Login failed: Invalid credentials for negisakshi032@gmail.com
+[2026-03-20T12:13:42.794Z] User object keys: subscriptionStatus, subscriptionExpiry, _id, email, name, score, quizzesAttempted, createdAt, __v, role, password
+[2026-03-20T12:13:42.794Z] User found: negisakshi032@gmail.com. Role: admin. HasPass: true
+[2026-03-20T12:13:42.795Z] Input password length: 10
+[2026-03-20T12:13:42.795Z] Comparing with hash: $2b$10$6v8...
+[2026-03-20T12:13:42.939Z] Comparison result: true
+[2026-03-20T12:13:42.939Z] Login SUCCESS for negisakshi032@gmail.com
+[2026-03-20T12:14:07.702Z] Login failed: User not found: "negisakshi032@gmail.co"
+[2026-03-20T12:14:10.868Z] User object keys: subscriptionStatus, subscriptionExpiry, _id, email, name, score, quizzesAttempted, createdAt, __v, role, password
+[2026-03-20T12:14:10.868Z] User found: negisakshi032@gmail.com. Role: admin. HasPass: true
+[2026-03-20T12:14:10.869Z] Input password length: 10
+[2026-03-20T12:14:10.869Z] Comparing with hash: $2b$10$6v8...
+[2026-03-20T12:14:10.970Z] Comparison result: true
+[2026-03-20T12:14:10.970Z] Login SUCCESS for negisakshi032@gmail.com

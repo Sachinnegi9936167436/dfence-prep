@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://dfenceprep.vercel.app/sitemap.xml
