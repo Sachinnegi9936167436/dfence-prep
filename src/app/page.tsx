@@ -33,7 +33,7 @@ export default async function Home() {
       <div className="absolute top-1/2 left-1/3 w-96 h-96 bg-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-float -z-10" style={{ animationDelay: '4s' }}></div>
 
       <section className="text-center py-16 space-y-6 opacity-0 animate-fade-in-up stagger-1 relative z-10">
-        <h1 className="text-5xl font-extrabold tracking-tight md:text-6xl text-transparent bg-clip-text bg-gradient-to-br from-slate-900 via-slate-700 to-slate-500">
+        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight md:text-6xl text-transparent bg-clip-text bg-gradient-to-br from-slate-900 via-slate-700 to-slate-500">
           Prepare for your Defence Exams
         </h1>
         <p className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto font-medium">
