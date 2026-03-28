@@ -4,6 +4,7 @@ import './globals.css'
 import Link from 'next/link'
 import { getSession } from '@/lib/auth';
 import NavigationHeader from '@/components/NavigationHeader';
+import { Analytics } from '@vercel/analytics/react';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,8 +21,8 @@ export default async function RootLayout({
   const session = await getSession();
 
   return (
-    <html lang="en">
-      <body className={`${inter.className} bg-slate-50 text-slate-900 min-h-screen flex flex-col`}>
+    <html lang="en" suppressHydrationWarning>
+      <body suppressHydrationWarning className={`${inter.className} bg-slate-50 text-slate-900 min-h-screen flex flex-col overflow-x-hidden`}>
         <NavigationHeader session={session} />
         <main className="flex-1 container mx-auto px-4 py-8">
           {children}
@@ -34,6 +35,7 @@ export default async function RootLayout({
             </div>
           </div>
         </footer>
+        <Analytics />
       </body>
     </html>
   )

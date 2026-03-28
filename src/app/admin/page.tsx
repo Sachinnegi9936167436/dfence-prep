@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Loader2, Plus, RefreshCw, CheckCircle, XCircle, Trash2, Users, Pencil, X } from 'lucide-react';
 
 export default function AdminDashboard() {
@@ -348,7 +348,7 @@ export default function AdminDashboard() {
               <span className="bg-slate-900 text-white text-xs px-2.5 py-1 rounded-full font-mono">{users.length} Logs</span>
             </div>
             
-            <div className="overflow-y-auto max-h-[500px] bg-white w-full">
+            <div className="overflow-x-auto overflow-y-auto max-h-[500px] bg-white w-full">
               {loadingUsers ? (
                 <div className="flex items-center justify-center py-20"><Loader2 className="h-10 w-10 animate-spin text-purple-600" /></div>
               ) : users.length === 0 ? (
@@ -368,8 +368,8 @@ export default function AdminDashboard() {
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {users.map(user => (
-                      <>
-                        <tr key={user._id} className="hover:bg-slate-50 transition-colors">
+                      <React.Fragment key={user._id}>
+                        <tr className="hover:bg-slate-50 transition-colors">
                           <td className="px-5 py-4 text-slate-800">
                             <p className="font-bold">{user.email}</p>
                             <p className="text-xs text-slate-500 font-medium">{user.name || 'UNVERIFIED ALIAS'}</p>
@@ -434,7 +434,7 @@ export default function AdminDashboard() {
                             </td>
                           </tr>
                         )}
-                      </>
+                      </React.Fragment>
                     ))}
                   </tbody>
                 </table>
