@@ -189,10 +189,10 @@ export default function AdminDashboard() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-8">
-      <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
         <div>
-          <h1 className="text-3xl font-extrabold text-slate-900">Admin Dashboard</h1>
-          <p className="text-slate-500 mt-1">Manage platform content and user subscriptions.</p>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Admin Dashboard</h1>
+          <p className="text-slate-500 mt-1 text-sm sm:text-base">Manage platform content and user subscriptions.</p>
         </div>
       </div>
 
@@ -212,24 +212,24 @@ export default function AdminDashboard() {
             <button 
               onClick={handleFetchNews} 
               disabled={loading}
-              className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl hover:bg-blue-700 transition flex items-center justify-center disabled:opacity-70 shadow-sm"
+              className="w-full bg-blue-600 text-white font-bold py-3 sm:py-4 rounded-xl hover:bg-blue-700 transition flex items-center justify-center disabled:opacity-70 shadow-sm text-sm sm:text-base"
             >
               {loading ? (
-                <><Loader2 className="animate-spin mr-2 h-5 w-5" /> Processing AI generated content...</>
+                <><Loader2 className="animate-spin mr-2 h-5 w-5" /> Generating...</>
               ) : (
-                <><Plus className="mr-2 h-5 w-5" /> Fetch Latest News &amp; Generate Quizzes</>
+                <><Plus className="mr-2 h-5 w-5" /> Fetch News & Generate Quizzes</>
               )}
             </button>
 
             <button
               onClick={handleResetQuizzes}
               disabled={resetting}
-              className="w-full bg-red-50 text-red-600 border border-red-200 font-bold py-3 rounded-xl hover:bg-red-100 transition flex items-center justify-center disabled:opacity-70 text-sm"
+              className="w-full bg-red-50 text-red-600 border border-red-200 font-bold py-3 rounded-xl hover:bg-red-100 transition flex items-center justify-center disabled:opacity-70 text-xs sm:text-sm"
             >
               {resetting ? (
                 <><Loader2 className="animate-spin mr-2 h-4 w-4" /> Resetting...</>
               ) : (
-                <><RefreshCw className="mr-2 h-4 w-4" /> Reset &amp; Clear All Quizzes</>
+                <><RefreshCw className="mr-2 h-4 w-4" /> Reset & Clear All Quizzes</>
               )}
             </button>
           </div>
@@ -396,7 +396,7 @@ export default function AdminDashboard() {
                         {editingUser?._id === user._id && (
                           <tr key={`edit-${user._id}`} className="bg-blue-50/60">
                             <td colSpan={4} className="px-5 py-5">
-                              <form onSubmit={handleSaveEdit} className="grid grid-cols-2 md:grid-cols-4 gap-3 items-end">
+                              <form onSubmit={handleSaveEdit} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
                                 {editError && <div className="col-span-full text-xs font-semibold text-red-600 bg-red-50 py-2 px-3 border border-red-200 rounded-lg">{editError}</div>}
                                 <div>
                                   <label className="block text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-wider">Name</label>
@@ -405,10 +405,6 @@ export default function AdminDashboard() {
                                 <div>
                                   <label className="block text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-wider">Email*</label>
                                   <input type="email" required value={editEmail} onChange={e => setEditEmail(e.target.value)} className="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none shadow-sm" />
-                                </div>
-                                <div>
-                                  <label className="block text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-wider">New Password <span className="normal-case text-slate-400 font-normal">(leave blank to keep)</span></label>
-                                  <input type="password" value={editPassword} onChange={e => setEditPassword(e.target.value)} minLength={6} className="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none shadow-sm" placeholder="••••••••" />
                                 </div>
                                 <div>
                                   <label className="block text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-wider">Role</label>
@@ -424,9 +420,13 @@ export default function AdminDashboard() {
                                     <option value="active">ACTIVE</option>
                                   </select>
                                 </div>
-                                <div className="col-span-full flex justify-end gap-2 pt-1">
-                                  <button type="button" onClick={() => setEditingUser(null)} className="px-4 py-2 text-sm rounded-xl border border-slate-300 text-slate-700 font-semibold hover:bg-slate-100 transition">Cancel</button>
-                                  <button type="submit" disabled={savingEdit} className="px-5 py-2 text-sm rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition disabled:opacity-60 flex items-center gap-1">
+                                <div className="sm:col-span-2 lg:col-span-2">
+                                  <label className="block text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-wider">New Password <span className="normal-case text-slate-400 font-normal">(leave blank to keep)</span></label>
+                                  <input type="password" value={editPassword} onChange={e => setEditPassword(e.target.value)} minLength={6} className="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none shadow-sm" placeholder="••••••••" />
+                                </div>
+                                <div className="sm:col-span-2 lg:col-span-2 flex justify-end gap-2 pt-1">
+                                  <button type="button" onClick={() => setEditingUser(null)} className="flex-1 sm:flex-none px-4 py-2 text-sm rounded-xl border border-slate-300 text-slate-700 font-semibold hover:bg-slate-100 transition">Cancel</button>
+                                  <button type="submit" disabled={savingEdit} className="flex-1 sm:flex-none px-5 py-2 text-sm rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition disabled:opacity-60 flex items-center justify-center gap-1">
                                     {savingEdit ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Save Changes'}
                                   </button>
                                 </div>

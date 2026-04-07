@@ -32,21 +32,21 @@ export default async function Home() {
       <div className="absolute top-40 -right-20 w-96 h-96 bg-indigo-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-float -z-10" style={{ animationDelay: '2s' }}></div>
       <div className="absolute top-1/2 left-1/3 w-96 h-96 bg-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-float -z-10" style={{ animationDelay: '4s' }}></div>
 
-      <section className="text-center py-16 space-y-6 opacity-0 animate-fade-in-up stagger-1 relative z-10">
-        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight md:text-6xl text-transparent bg-clip-text bg-gradient-to-br from-slate-900 via-slate-700 to-slate-500">
+      <section className="text-center py-12 sm:py-16 space-y-6 opacity-0 animate-fade-in-up stagger-1 relative z-10">
+        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight md:text-6xl text-transparent bg-clip-text bg-gradient-to-br from-slate-900 via-slate-700 to-slate-500">
           Prepare for your Defence Exams
         </h1>
-        <p className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto font-medium">
+        <p className="text-base sm:text-lg md:text-xl text-slate-500 max-w-2xl mx-auto font-medium px-4">
           Daily curated news and MCQ quizzes for Defence, Sports, Awards, Books, Exercises and International Relations.
         </p>
         <div className="pt-6">
-          <Link href="/daily-quiz" className="inline-block bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-full font-bold shadow-[0_8px_30px_rgb(37,99,235,0.2)] hover:shadow-[0_8px_30px_rgb(37,99,235,0.4)] hover:-translate-y-1 hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 ring-4 ring-blue-50">
+          <Link href="/daily-quiz" className="inline-block bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold shadow-[0_8px_30px_rgb(37,99,235,0.2)] hover:shadow-[0_8px_30px_rgb(37,99,235,0.4)] hover:-translate-y-1 hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 ring-4 ring-blue-50 text-sm sm:text-base">
             Take Today's Quiz
           </Link>
         </div>
       </section>
 
-      <section className="grid grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 relative z-10 px-4">
         {['Defence', 'Sports', 'Awards', 'Books', 'Exercises', 'International Relations'].map((cat, index) => {
           const Icon = CAT_ICONS[cat];
           return (

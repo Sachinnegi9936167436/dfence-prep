@@ -139,8 +139,8 @@ export default function QuizClient() {
         <span>Question {currentIndex + 1} of {quizzes.length}</span>
       </div>
 
-      <div className="bg-white/95 backdrop-blur-md p-8 md:p-10 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 space-y-8 hover:-translate-y-1 transition-transform duration-500">
-        <h2 className="text-2xl md:text-3xl font-extrabold leading-snug text-slate-900">{currentQuiz.question}</h2>
+      <div className="bg-white/95 backdrop-blur-md p-6 sm:p-8 md:p-10 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 space-y-6 sm:space-y-8 hover:-translate-y-1 transition-transform duration-500">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold leading-snug text-slate-900">{currentQuiz.question}</h2>
 
         <div className="space-y-4">
           {currentQuiz.options.map((option: string, idx: number) => {
