@@ -24,11 +24,11 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning className={`${inter.className} bg-slate-50 text-slate-900 min-h-screen flex flex-col overflow-x-hidden`}>
         <NavigationHeader session={session} />
-        <main className="flex-1 container mx-auto px-4 py-8">
+        <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 overflow-x-hidden">
           {children}
         </main>
         <footer className="border-t py-6 bg-white mt-auto">
-          <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between text-sm text-slate-500">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between text-sm text-slate-500">
             <p>© {new Date().getFullYear()} DfencePrep. All rights reserved.</p>
             <div className="flex space-x-4 mt-4 md:mt-0">
               <Link href="/admin" className="hover:text-slate-900">Admin</Link>

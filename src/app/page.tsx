@@ -46,7 +46,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 relative z-10 px-4">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10 px-4">
         {['Defence', 'Sports', 'Awards', 'Books', 'Exercises', 'International Relations'].map((cat, index) => {
           const Icon = CAT_ICONS[cat];
           return (
@@ -60,8 +60,8 @@ export default async function Home() {
         })}
       </section>
 
-      <section className="space-y-8 relative z-10 mt-16">
-        <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 border-b border-slate-200 pb-4">Latest News</h2>
+      <section className="space-y-8 relative z-10 mt-16 px-4">
+        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 border-b border-slate-200 pb-4">Latest News</h2>
         {latestArticles.length === 0 ? (
           <p className="text-slate-500 bg-white/50 backdrop-blur p-8 rounded-2xl text-center shadow-sm opacity-0 animate-fade-in-up stagger-1 font-medium">No news articles found. Ask the admin to fetch the latest news.</p>
         ) : (
