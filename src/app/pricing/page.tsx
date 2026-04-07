@@ -5,9 +5,9 @@ import { useRouter } from 'next/navigation';
 import { Check, ShieldCheck, QrCode, Loader2 } from 'lucide-react';
 
 const PLANS = [
-  { id: '1_week', name: '1 Week Access', price: 30, duration: '7 days', features: ['Daily News Updates', 'AI Generated Quizzes', 'Progress Tracking'] },
-  { id: '1_month', name: '1 Month Access', price: 50, duration: '30 days', features: ['Daily News Updates', 'AI Generated Quizzes', 'Progress Tracking', 'Priority Support'], popular: true },
-  { id: '3_months', name: '3 Months Access', price: 80, duration: '90 days', features: ['Daily News Updates', 'AI Generated Quizzes', 'Progress Tracking', 'Priority Support', 'Exam Strategy Guide'] },
+  { id: '1_week', name: '1 Week Access', price: 30, duration: '7 days', features: ['Daily News Updates', 'Progress Tracking'] },
+  { id: '1_month', name: '1 Month Access', price: 50, duration: '30 days', features: ['Daily News Updates', 'Progress Tracking', 'Priority Support'], popular: true },
+  { id: '3_months', name: '3 Months Access', price: 80, duration: '90 days', features: ['Daily News Updates', 'Progress Tracking', 'Priority Support', 'Exam Strategy Guide'] },
 ];
 
 export default function PricingPage() {

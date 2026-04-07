@@ -34,18 +34,13 @@ export default function RegisterPage() {
       }
 
       if (res.ok && data.success) {
-        // Automatically login after register
-        const loginRes = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password }),
-        });
-        if (loginRes.ok) {
+        if (data.redirectToVerify) {
+          router.push(`/verify-email?email=${encodeURIComponent(data.email)}`);
+        } else {
+          // This is a fallback if the API doesn't return redirectToVerify
           localStorage.setItem('userEmail', email);
           router.push('/');
           router.refresh();
-        } else {
-          router.push('/login');
         }
       } else {
         setError(data.error || `Error ${res.status}: ${res.statusText}`);

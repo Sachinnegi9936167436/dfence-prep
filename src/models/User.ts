@@ -9,6 +9,12 @@ export interface IUser extends Document {
   subscriptionStatus: 'active' | 'inactive' | 'pending';
   subscriptionExpiry: Date | null;
   role: 'admin' | 'user';
+  isVerified: boolean;
+  verificationToken?: string;
+  otp?: string;
+  otpExpires?: Date;
+  resetPasswordToken?: string;
+  resetPasswordExpires?: Date;
   createdAt: Date;
 }
 
@@ -25,6 +31,12 @@ const UserSchema: Schema = new Schema({
   },
   subscriptionExpiry: { type: Date, default: null },
   role: { type: String, enum: ['admin', 'user'], default: 'user' },
+  isVerified: { type: Boolean, default: false },
+  verificationToken: { type: String },
+  otp: { type: String },
+  otpExpires: { type: Date },
+  resetPasswordToken: { type: String },
+  resetPasswordExpires: { type: Date },
   createdAt: { type: Date, default: Date.now },
 });
 
