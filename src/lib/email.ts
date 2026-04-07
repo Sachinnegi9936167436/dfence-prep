@@ -1,53 +1,54 @@
 import nodemailer from 'nodemailer';
 
-const smtpConfig = {
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT || '587'),
-  secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-  tls: {
-    rejectUnauthorized: false // Often needed for some SMTP servers
+// Helper to get SMTP config with validation
+const getSmtpConfig = () => {
+  const host = process.env.SMTP_HOST;
+  const port = parseInt(process.env.SMTP_PORT || '587');
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+
+  if (!host || !user || !pass) {
+    return null;
   }
+
+  return {
+    host,
+    port,
+    secure: process.env.SMTP_SECURE === 'true', 
+    auth: { user, pass },
+    tls: {
+      rejectUnauthorized: false
+    }
+  };
 };
 
-console.log('Initializing Email Transporter with:', {
-  host: smtpConfig.host,
-  port: smtpConfig.port,
-  secure: smtpConfig.secure,
-  user: smtpConfig.auth.user
-});
-
-const transporter = nodemailer.createTransport(
-  process.env.SMTP_HOST ? smtpConfig : {
-    streamConfig: true,
-    newline: 'unix',
-    buffer: true,
-  } as any
-);
-
 export async function sendEmail({ to, subject, html }: { to: string; subject: string; html: string }) {
-  if (!process.env.SMTP_HOST) {
-    console.log('--- MOCK EMAIL ---');
+  const smtpConfig = getSmtpConfig();
+
+  if (!smtpConfig) {
+    console.log('⚠️ [Email] SMTP Configuration is missing! Falling back to MOCK mode.');
     console.log(`To: ${to}`);
     console.log(`Subject: ${subject}`);
-    console.log(`Content: ${html}`);
     console.log('------------------');
     return { messageId: 'mock-id' };
   }
 
   try {
+    const transporter = nodemailer.createTransport(smtpConfig);
+    
+    console.log(`📧 [Email] Sending to ${to}...`);
     const info = await transporter.sendMail({
-      from: `"DfencePrep" <${process.env.SMTP_USER}>`,
+      from: `"DfencePrep" <${smtpConfig.auth.user}>`,
       to,
       subject,
       html,
     });
+    
+    console.log(`✅ [Email] Sent successfully! MessageId: ${info.messageId}`);
     return info;
-  } catch (error) {
-    console.error('Email send error:', error);
-    throw new Error('Failed to send email');
+  } catch (error: any) {
+    console.error('❌ [Email] Send Error:', error.message);
+    // Explicitly throw it so the API route can return a clearer error
+    throw error;
   }
 }
