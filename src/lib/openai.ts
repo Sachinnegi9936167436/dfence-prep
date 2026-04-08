@@ -131,9 +131,16 @@ export async function generateSummaryFromText(text: string): Promise<string> {
   }
 
   const prompt = `
-Summarize the following news article into exactly 3-4 professional bullet points. 
-Focus on factual updates relevant to defence exam aspirants (CDS/NDA/AFCAT). 
-Maintain a formal, objective tone.
+Provide a comprehensive and detailed summary of the following news article. 
+The summary should be structured in 5-7 detailed bullet points that clearly explain the "Who, What, When, Where, and Why" of the news. 
+
+Ensure the summary provides enough substance for the user to get a complete "basic idea" of the development without needing to visit the source website.
+
+STRICT GUIDELINES:
+1. Cover the core event, the organizations/people involved, and the strategic implications.
+2. Focus on factual updates relevant to Indian Defence exam aspirants (CDS/NDA/AFCAT).
+3. Use a formal, professional, and objective tone.
+4. Each bullet point should be a complete, informative sentence.
 
 Article text:
 "${text.substring(0, 3500)}"
