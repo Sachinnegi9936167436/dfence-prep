@@ -33,33 +33,35 @@ export default function NewsArticleClient({ article, index }: { article: Article
     <>
       <div 
         onClick={toggleModal}
-        className={`bg-white/90 backdrop-blur-md rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden flex flex-col hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 opacity-0 animate-fade-in-up stagger-${(index % 6) + 1} group cursor-pointer h-full`}
+        className={`bg-white rounded-[2rem] shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 overflow-hidden flex flex-col hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-all duration-500 opacity-0 animate-fade-in-up stagger-${(index % 6) + 1} group cursor-pointer h-full`}
       >
         {article.imageUrl && (
-          <div className="relative h-52 w-full overflow-hidden">
-            <img src={article.imageUrl} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div className="relative h-56 w-full overflow-hidden">
+            <img src={article.imageUrl} alt={article.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent opacity-60 group-hover:opacity-100 transition-opacity"></div>
+            <div className="absolute top-4 left-4">
+               <span className="bg-white/90 backdrop-blur-md text-slate-900 text-[10px] font-black px-3 py-1.5 rounded-full shadow-sm flex items-center gap-1.5">
+                 <Icon className="h-3 w-3 text-blue-600" />
+                 {article.category}
+               </span>
+            </div>
           </div>
         )}
-        <div className="p-6 flex-1 flex flex-col">
-          <div className="flex items-center space-x-3 text-xs text-slate-500 mb-4">
-            <span className="font-bold text-blue-700 bg-blue-50 px-3 py-1.5 rounded-full flex items-center gap-1.5">
-              <Icon className="h-3 w-3" />
-              {article.category}
-            </span>
-            <span className="font-medium flex items-center">
-              <Clock className="h-3 w-3 mr-1" />
+        <div className="p-7 flex-1 flex flex-col">
+          <div className="flex items-center space-x-3 text-[10px] text-slate-400 font-black uppercase tracking-widest mb-4">
+            <span className="flex items-center">
+              <Clock className="h-3 w-3 mr-1.5" />
               {new Date(article.publishedAt).toLocaleDateString()}
             </span>
           </div>
-          <h3 className="font-extrabold text-xl mb-3 line-clamp-2 text-slate-900 group-hover:text-blue-700 transition-colors leading-tight">{article.title}</h3>
-          <p className="text-slate-600 text-sm line-clamp-3 mb-6 flex-1 leading-relaxed">{article.content}</p>
-          <div className="mt-auto flex items-center justify-between">
-            <button className="inline-flex items-center text-blue-600 text-sm font-bold hover:text-indigo-700 transition-colors">
-              Summary 
-              <span className="ml-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all">
-                <svg className="w-3 h-3 translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" /></svg>
-              </span>
+          <h3 className="font-black text-xl mb-3 line-clamp-2 text-slate-900 group-hover:text-blue-700 transition-colors leading-tight font-heading">{article.title}</h3>
+          <p className="text-slate-500 text-sm line-clamp-3 mb-6 flex-1 leading-relaxed font-medium">{article.content}</p>
+          <div className="mt-auto pt-6 border-t border-slate-50">
+            <button className="flex items-center justify-between w-full text-blue-600 text-xs font-black uppercase tracking-widest group/btn hover:text-indigo-700 transition-colors">
+              <span>Detailed Summary</span>
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-50 text-blue-600 group-hover/btn:bg-blue-600 group-hover/btn:text-white transition-all shadow-inner">
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" /></svg>
+              </div>
             </button>
           </div>
         </div>
