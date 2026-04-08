@@ -13,8 +13,8 @@ export async function GET() {
 
     await connectToDatabase();
     
-    // Fetch all users but completely strip out the password fields for system security
-    const users = await User.find({}, '-password').sort({ createdAt: -1 });
+    // Fetch only verified users and strip out password fields
+    const users = await User.find({ isVerified: true }, '-password').sort({ createdAt: -1 });
 
     return NextResponse.json({ success: true, users });
   } catch (error: any) {
@@ -51,7 +51,8 @@ export async function POST(request: Request) {
       password: hashedPassword,
       name: name || '',
       role: role || 'user',
-      subscriptionStatus: subscriptionStatus || 'inactive'
+      subscriptionStatus: subscriptionStatus || 'inactive',
+      isVerified: true
     });
 
     // Remove the password buffer before transmitting back
