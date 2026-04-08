@@ -27,10 +27,14 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   }
 
   await connectToDatabase();
-  // Fetch articles for this category
-  const articles = await Article.find({ category: categoryName })
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  
+  // Fetch articles for this category within last 7 days
+  const articles = await Article.find({ 
+    category: categoryName,
+    publishedAt: { $gte: sevenDaysAgo }
+  })
     .sort({ publishedAt: -1 })
-    .limit(100) // Increase limit so older articles are fetched
     .lean();
 
   const serializedArticles = JSON.parse(JSON.stringify(articles));
@@ -39,6 +43,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   
   const recentArticles = serializedArticles.filter((a: any) => new Date(a.publishedAt) >= twentyFourHoursAgo);
   const olderArticles = serializedArticles.filter((a: any) => new Date(a.publishedAt) < twentyFourHoursAgo);
+
 
   const ArticleGrid = ({ items, emptyMessage }: { items: any[], emptyMessage: string }) => {
     if (items.length === 0) {

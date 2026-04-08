@@ -223,11 +223,17 @@ export async function POST(req: Request) {
         }
       }
     }
+    
+    // Cleanup: Delete articles older than 7 days
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const deleteResult = await Article.deleteMany({ publishedAt: { $lt: sevenDaysAgo } });
+    console.log(`🧹 [Cleanup] Deleted ${deleteResult.deletedCount} stale articles.`);
 
     return NextResponse.json({ 
       success: true, 
-      message: 'News fetched and quizzes generated.',
-      newArticlesCount
+      message: 'News fetched and quizzes generated. Stale news purged.',
+      newArticlesCount,
+      purgedCount: deleteResult.deletedCount
     });
 
   } catch (error: any) {

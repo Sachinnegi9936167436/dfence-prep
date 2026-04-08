@@ -18,7 +18,10 @@ export const dynamic = 'force-dynamic';
 
 async function getLatestArticles() {
   await connectToDatabase();
-  const articles = await Article.find().sort({ publishedAt: -1 }).limit(6).lean();
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  const articles = await Article.find({
+    publishedAt: { $gte: sevenDaysAgo }
+  }).sort({ publishedAt: -1 }).limit(6).lean();
   return JSON.parse(JSON.stringify(articles)); // Serialize for client
 }
 
