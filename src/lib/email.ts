@@ -31,7 +31,7 @@ const getSmtpConfig = () => {
   };
 };
 
-export async function sendEmail({ to, subject, html }: { to: string; subject: string; html: string }) {
+export async function sendEmail({ to, subject, html, replyTo }: { to: string; subject: string; html: string, replyTo?: string }) {
   const smtpConfig = getSmtpConfig();
 
   if (!smtpConfig) {
@@ -47,10 +47,11 @@ export async function sendEmail({ to, subject, html }: { to: string; subject: st
     
     console.log(`📧 [Email] Sending to ${to}...`);
     const info = await transporter.sendMail({
-      from: `"DfencePrep" <${smtpConfig.auth.user}>`,
+      from: `"DfencePrep Support" <${smtpConfig.auth.user}>`,
       to,
       subject,
       html,
+      replyTo: replyTo || smtpConfig.auth.user,
     });
     
     console.log(`✅ [Email] Sent successfully! MessageId: ${info.messageId}`);

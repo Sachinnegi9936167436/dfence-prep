@@ -6,14 +6,30 @@ import crypto from 'crypto';
 import { sendEmail } from '@/lib/email';
 
 const generateOtpEmailHtml = (otp: string) => `
-  <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px;">
-    <h2 style="color: #1e293b; text-align: center;">Welcome to DfencePrep!</h2>
-    <p style="color: #475569; font-size: 16px; line-height: 1.6;">Thank you for signing up. Please use the following code to verify your account:</p>
-    <div style="background-color: #f1f5f9; padding: 20px; border-radius: 8px; text-align: center; margin: 24px 0;">
-      <span style="font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #2563eb;">${otp}</span>
+  <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #334155;">
+    <div style="text-align: center; margin-bottom: 30px;">
+      <h1 style="color: #0f172a; margin: 0; font-size: 24px;">Welcome to DfencePrep</h1>
+      <p style="color: #64748b; margin-top: 8px;">Your gateway to excellence</p>
     </div>
-    <p style="color: #475569; font-size: 14px; text-align: center;">This code will expire in 10 minutes.</p>
-    <p style="color: #94a3b8; font-size: 12px; text-align: center; margin-top: 32px;">If you didn't create an account, you can safely ignore this email.</p>
+    
+    <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 40px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+      <h2 style="color: #1e293b; font-size: 20px; margin-top: 0; text-align: center;">Verify Your Account</h2>
+      <p style="font-size: 16px; line-height: 1.6; text-align: center;">Thank you for joining DfencePrep. Please use the verification code below to complete your registration:</p>
+      
+      <div style="background-color: #f8fafc; padding: 30px; border-radius: 12px; text-align: center; margin: 30px 0; border: 1px dashed #cbd5e1;">
+        <span style="font-size: 36px; font-weight: 800; letter-spacing: 10px; color: #2563eb; font-family: monospace;">${otp}</span>
+      </div>
+      
+      <p style="color: #64748b; font-size: 14px; text-align: center; margin-bottom: 0;">This code will expire in 10 minutes for your security.</p>
+    </div>
+    
+    <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+      <p style="color: #94a3b8; font-size: 12px; line-height: 1.5; margin: 0;">
+        &copy; ${new Date().getFullYear()} DfencePrep. All rights reserved.<br />
+        New Delhi, India | <a href="#" style="color: #64748b; text-decoration: underline;">Terms of Service</a><br />
+        If you didn't create an account, you can safely ignore this email.
+      </p>
+    </div>
   </div>
 `;
 

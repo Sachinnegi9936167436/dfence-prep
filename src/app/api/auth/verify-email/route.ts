@@ -62,11 +62,24 @@ export async function POST(req: Request) {
       to: user.email,
       subject: 'Verify your email - DfencePrep',
       html: `
-        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2>Verify Your Email</h2>
-          <p>Thank you for signing up for DfencePrep. Click the button below to verify your email address:</p>
-          <a href="${verifyUrl}" style="display: inline-block; padding: 12px 24px; background-color: #2563eb; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">Verify Email</a>
-          <p>If you didn't create an account, you can safely ignore this email.</p>
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #334155;">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #0f172a; margin: 0; font-size: 24px;">Verify Your Email</h1>
+          </div>
+          <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 40px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+            <p style="font-size: 16px; line-height: 1.6; text-align: center; margin-top: 0;">Thank you for signing up for DfencePrep. Click the button below to verify your email address and activate your account:</p>
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${verifyUrl}" style="display: inline-block; padding: 14px 32px; background-color: #2563eb; color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 16px; transition: background-color 0.2s;">Verify Email Address</a>
+            </div>
+            <p style="color: #64748b; font-size: 14px; text-align: center; margin-bottom: 0;">If the button above doesn't work, you can copy and paste this link into your browser:<br /><span style="color: #2563eb; word-break: break-all;">${verifyUrl}</span></p>
+          </div>
+          <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+            <p style="color: #94a3b8; font-size: 12px; line-height: 1.5; margin: 0;">
+              &copy; ${new Date().getFullYear()} DfencePrep. All rights reserved.<br />
+              New Delhi, India | <a href="#" style="color: #64748b; text-decoration: underline;">Support</a><br />
+              If you didn't create an account, you can safely ignore this email.
+            </p>
+          </div>
         </div>
       `,
     });
