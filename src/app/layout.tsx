@@ -38,8 +38,6 @@ export default async function RootLayout({
             </div>
             <div className="flex space-x-8 md:justify-end text-sm font-bold uppercase tracking-widest overflow-x-auto no-scrollbar">
               <Link href="/admin" className="text-slate-500 hover:text-white transition-colors">Admin Portal</Link>
-              <Link href="#" className="text-slate-500 hover:text-white transition-colors">Support</Link>
-              <Link href="#" className="text-slate-500 hover:text-white transition-colors">Internal</Link>
             </div>
           </div>
           <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 flex flex-col sm:flex-row justify-between items-center text-xs tracking-wide">

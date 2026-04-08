@@ -114,7 +114,6 @@ export default async function Home() {
       <section className="space-y-10 relative z-10 px-4">
         <div className="flex items-center justify-between">
            <h2 className="text-3xl font-black text-slate-900 font-heading">Recent Intelligence Feed</h2>
-           <Link href="#" className="hidden sm:block text-xs font-black uppercase tracking-widest text-blue-600 hover:text-indigo-700 transition-colors">View Deployment Archive</Link>
         </div>
         {latestArticles.length === 0 ? (
           <div className="bg-slate-50 border-2 border-dashed border-slate-200 p-20 rounded-[3rem] text-center opacity-0 animate-fade-in-up">
