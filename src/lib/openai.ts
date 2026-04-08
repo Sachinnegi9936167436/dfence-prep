@@ -125,3 +125,30 @@ News article text:
     return fallbackQuizzes("OpenAI API reported an error or is out of credits");
   }
 }
+export async function generateSummaryFromText(text: string): Promise<string> {
+  if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'your-key-here') {
+    return text.substring(0, 300) + "..."; // Simple fallback
+  }
+
+  const prompt = `
+Summarize the following news article into exactly 3-4 professional bullet points. 
+Focus on factual updates relevant to defence exam aspirants (CDS/NDA/AFCAT). 
+Maintain a formal, objective tone.
+
+Article text:
+"${text.substring(0, 3500)}"
+`;
+
+  try {
+    const response = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.3,
+    });
+
+    return response.choices[0].message.content || text.substring(0, 300) + "...";
+  } catch (error) {
+    console.error('Error generating summary:', error);
+    return text.substring(0, 300) + "...";
+  }
+}

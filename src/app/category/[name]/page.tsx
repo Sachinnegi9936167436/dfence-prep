@@ -1,7 +1,8 @@
 import connectToDatabase from '@/lib/mongoose';
 import { Article } from '@/models/Article';
 import { notFound } from 'next/navigation';
-import { Clock, ExternalLink } from 'lucide-react';
+import { Clock } from 'lucide-react';
+import NewsArticleClient from '@/components/NewsArticleClient';
 
 export const dynamic = 'force-dynamic';
 
@@ -46,24 +47,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
         {items.map((article: any, index: number) => (
-          <div key={article._id} className={`bg-white/90 backdrop-blur-md rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden flex flex-col hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 opacity-0 animate-fade-in-up stagger-${(index % 6) + 1} group`}>
-            {article.imageUrl && (
-              <div className="relative h-52 w-full overflow-hidden">
-                <img src={article.imageUrl} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-              </div>
-            )}
-            <div className="p-6 flex-1 flex flex-col">
-              <div className="flex items-center text-xs text-slate-500 mb-3">
-                <Clock className="h-3 w-3 mr-1 text-blue-600" />
-                <span className="font-medium">{new Date(article.publishedAt).toLocaleDateString()}</span>
-              </div>
-              <h3 className="font-extrabold text-xl mb-3 line-clamp-2 text-slate-900 group-hover:text-blue-700 transition-colors">{article.title}</h3>
-              <p className="text-slate-600 text-sm line-clamp-3 mb-6 flex-1 leading-relaxed">{article.content}</p>
-              <a href={article.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex items-center text-blue-600 text-sm font-bold hover:text-indigo-700 transition-colors">
-                Read source <ExternalLink className="h-4 w-4 ml-1 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-              </a>
-            </div>
-          </div>
+          <NewsArticleClient key={article._id} article={article} index={index} />
         ))}
       </div>
     );

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongoose';
 import { Article } from '@/models/Article';
 import { Quiz } from '@/models/Quiz';
-import { generateMCQsFromText } from '@/lib/openai';
+import { generateMCQsFromText, generateSummaryFromText } from '@/lib/openai';
 import * as cheerio from 'cheerio';
 
 // Define categories we want to fetch
@@ -179,6 +179,8 @@ export async function POST(req: Request) {
         let targetArticle = existing;
 
         if (!existing) {
+          const summary = await generateSummaryFromText(item.description || item.content || item.title);
+          
           targetArticle = await Article.create({
             title: item.title,
             content: item.description || item.content || item.title,
@@ -186,6 +188,7 @@ export async function POST(req: Request) {
             sourceUrl: item.url,
             imageUrl: item.image,
             publishedAt: new Date(item.publishedAt),
+            summary: summary,
             aiProcessed: false,
           });
           // @ts-ignore

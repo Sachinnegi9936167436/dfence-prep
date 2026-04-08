@@ -3,6 +3,7 @@ import { BookOpen, Trophy, Shield, Medal, Globe, Dumbbell } from 'lucide-react';
 import { Article } from '@/models/Article';
 import connectToDatabase from '@/lib/mongoose';
 import { getSession } from '@/lib/auth';
+import NewsArticleClient from '@/components/NewsArticleClient';
 
 const CAT_ICONS: Record<string, any> = {
   Defence: Shield,
@@ -67,24 +68,7 @@ export default async function Home() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {latestArticles.map((article: any, index: number) => (
-              <div key={article._id} className={`bg-white/90 backdrop-blur-md rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden flex flex-col hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 opacity-0 animate-fade-in-up stagger-${(index % 6) + 1} group`}>
-                {article.imageUrl && (
-                  <div className="overflow-hidden">
-                    <img src={article.imageUrl} alt={article.title} className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-700" />
-                  </div>
-                )}
-                <div className="p-6 flex-1 flex flex-col">
-                  <div className="flex items-center space-x-3 text-xs text-slate-500 mb-4">
-                    <span className="font-bold text-blue-700 bg-blue-50 px-3 py-1.5 rounded-full">{article.category}</span>
-                    <span className="font-medium">{new Date(article.publishedAt).toLocaleDateString()}</span>
-                  </div>
-                  <h3 className="font-extrabold text-xl mb-3 line-clamp-2 text-slate-900 group-hover:text-blue-700 transition-colors">{article.title}</h3>
-                  <p className="text-slate-600 text-sm line-clamp-3 mb-6 flex-1 leading-relaxed">{article.content}</p>
-                  <a href={article.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex items-center text-blue-600 text-sm font-bold hover:text-indigo-700 transition-colors">
-                    Read full article <svg className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-                  </a>
-                </div>
-              </div>
+              <NewsArticleClient key={article._id} article={article} index={index} />
             ))}
           </div>
         )}

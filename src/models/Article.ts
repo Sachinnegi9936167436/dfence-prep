@@ -7,6 +7,7 @@ export interface IArticle extends Document {
   sourceUrl?: string;
   imageUrl?: string;
   publishedAt: Date;
+  summary?: string;
   aiProcessed: boolean;
   createdAt: Date;
 }
@@ -22,6 +23,7 @@ const ArticleSchema: Schema = new Schema({
   sourceUrl: { type: String },
   imageUrl: { type: String },
   publishedAt: { type: Date, required: true },
+  summary: { type: String },
   aiProcessed: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
 });
