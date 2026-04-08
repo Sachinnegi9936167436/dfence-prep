@@ -363,6 +363,7 @@ export default function AdminDashboard() {
                        <th className="px-5 py-4 font-bold text-xs uppercase tracking-wider">Identity Locator (Email)</th>
                        <th className="px-5 py-4 font-bold text-xs uppercase tracking-wider">Clearance</th>
                        <th className="px-5 py-4 font-bold text-xs uppercase tracking-wider">Premium Access</th>
+                       <th className="px-5 py-4 font-bold text-xs uppercase tracking-wider">Last Access</th>
                        <th className="px-5 py-4 font-bold text-xs uppercase tracking-wider text-right">Eradicate</th>
                      </tr>
                   </thead>
@@ -379,6 +380,9 @@ export default function AdminDashboard() {
                           </td>
                           <td className="px-5 py-4">
                             <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest ${user.subscriptionStatus === 'active' ? 'bg-green-100 text-green-700 ring-1 ring-green-200/50' : 'bg-slate-100 text-slate-600 ring-1 ring-slate-200/50'}`}>{user.subscriptionStatus}</span>
+                          </td>
+                          <td className="px-5 py-4">
+                            <p className="text-xs font-mono text-slate-500">{user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'NEVER'}</p>
                           </td>
                           <td className="px-5 py-4 text-right flex items-center justify-end gap-1">
                             <button

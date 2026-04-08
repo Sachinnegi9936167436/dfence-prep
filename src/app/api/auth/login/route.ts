@@ -40,6 +40,10 @@ export async function POST(req: Request) {
       }, { status: 403 });
     }
 
+    // Update last login timestamp
+    user.lastLogin = new Date();
+    await user.save();
+
     // Set secure JWT cookie
     await setSessionCookie({ 
       userId: user._id.toString(), 

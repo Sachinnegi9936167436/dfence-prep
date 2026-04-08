@@ -15,6 +15,7 @@ export interface IUser extends Document {
   otpExpires?: Date;
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
+  lastLogin?: Date;
   createdAt: Date;
 }
 
@@ -37,6 +38,7 @@ const UserSchema: Schema = new Schema({
   otpExpires: { type: Date },
   resetPasswordToken: { type: String },
   resetPasswordExpires: { type: Date },
+  lastLogin: { type: Date },
   createdAt: { type: Date, default: Date.now },
 });
 
