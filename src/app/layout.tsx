@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Inter } from 'next/font/google'
 import './globals.css'
 import Link from 'next/link'
@@ -26,6 +27,7 @@ export default async function RootLayout({
         <NavigationHeader session={session} />
         <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 overflow-x-hidden">
           {children}
+          <SpeedInsights />
         </main>
         <footer className="border-t py-6 bg-white mt-auto">
           <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between text-sm text-slate-500">
