@@ -56,7 +56,7 @@ export default function NewsArticleClient({ article, index }: { article: Article
           <p className="text-slate-600 text-sm line-clamp-3 mb-6 flex-1 leading-relaxed">{article.content}</p>
           <div className="mt-auto flex items-center justify-between">
             <button className="inline-flex items-center text-blue-600 text-sm font-bold hover:text-indigo-700 transition-colors">
-              Read AI Summary 
+              Summary 
               <span className="ml-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-blue-100 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all">
                 <svg className="w-3 h-3 translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" /></svg>
               </span>
