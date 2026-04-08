@@ -131,16 +131,14 @@ export async function generateSummaryFromText(text: string): Promise<string> {
   }
 
   const prompt = `
-Provide a comprehensive and detailed summary of the following news article. 
-The summary should be structured in 5-7 detailed bullet points that clearly explain the "Who, What, When, Where, and Why" of the news. 
-
-Ensure the summary provides enough substance for the user to get a complete "basic idea" of the development without needing to visit the source website.
+You are an expert news editor. Provide a comprehensive and ORIGINAL summary of the following news article in SIMPLE, HUMAN-READABLE English.
 
 STRICT GUIDELINES:
-1. Cover the core event, the organizations/people involved, and the strategic implications.
-2. Focus on factual updates relevant to Indian Defence exam aspirants (CDS/NDA/AFCAT).
-3. Use a formal, professional, and objective tone.
-4. Each bullet point should be a complete, informative sentence.
+1. DO NOT copy and paste sentences from the source. Re-write the entire update in your own words.
+2. Structure the summary in 5-7 detailed bullet points that explain the "Who, What, When, Where, and Why".
+3. Use simple, clear language that is easy for students to digest, while maintaining a professional tone.
+4. Explain any complex defence or technical jargon in simple terms within the summary.
+5. Ensure the user gets a complete understanding of the strategic importance for Indian Defence exam aspirants (CDS/NDA/AFCAT).
 
 Article text:
 "${text.substring(0, 3500)}"
