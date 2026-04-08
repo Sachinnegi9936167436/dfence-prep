@@ -22,6 +22,8 @@ export async function GET(req: Request) {
 
     user.isVerified = true;
     user.verificationToken = undefined;
+    user.otp = undefined;
+    user.otpExpires = undefined;
     await user.save();
 
     return NextResponse.json({ success: true, message: 'Email verified successfully' });

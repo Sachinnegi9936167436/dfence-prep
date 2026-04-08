@@ -31,6 +31,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
+    // Check if email is verified
+    if (!user.isVerified) {
+      return NextResponse.json({ 
+        error: 'Email not verified', 
+        requiresVerification: true,
+        email: user.email 
+      }, { status: 403 });
+    }
+
     // Set secure JWT cookie
     await setSessionCookie({ 
       userId: user._id.toString(), 

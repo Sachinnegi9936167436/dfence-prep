@@ -37,6 +37,11 @@ export default function LoginPage() {
         localStorage.setItem('userEmail', email);
         router.push('/');
         router.refresh(); // Refresh to update layouts holding server state
+      } else if (res.status === 403 && data.requiresVerification) {
+        setError('Your email is not verified. Redirecting to verification page...');
+        setTimeout(() => {
+          router.push(`/verify-email?email=${encodeURIComponent(email)}`);
+        }, 2000);
       } else {
         setError(data.error || `Error ${res.status}: ${res.statusText}`);
       }

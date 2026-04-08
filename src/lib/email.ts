@@ -8,16 +8,25 @@ const getSmtpConfig = () => {
   const pass = process.env.SMTP_PASS;
 
   if (!host || !user || !pass) {
+    const missing = [];
+    if (!host) missing.push('SMTP_HOST');
+    if (!user) missing.push('SMTP_USER');
+    if (!pass) missing.push('SMTP_PASS');
+    
+    if (missing.length > 0) {
+      console.warn(`⚠️ [Email] Missing configuration: ${missing.join(', ')}`);
+    }
     return null;
   }
 
   return {
     host,
     port,
-    secure: process.env.SMTP_SECURE === 'true', 
+    secure: process.env.SMTP_SECURE === 'true' || port === 465, 
     auth: { user, pass },
     tls: {
-      rejectUnauthorized: false
+      // Helps with many SMTP providers, but can be adjusted for security if needed
+      rejectUnauthorized: process.env.NODE_ENV === 'production' ? true : false
     }
   };
 };
