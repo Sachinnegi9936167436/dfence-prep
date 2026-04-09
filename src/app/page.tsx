@@ -96,22 +96,16 @@ export default async function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {['Defence', 'Sports', 'Awards', 'Books', 'Exercises', 'International Relations'].map((cat, index) => {
             const Icon = CAT_ICONS[cat];
-            const hasCustomImage = cat === 'Exercises' || cat === 'Defence';
-            const bgImage = cat === 'Exercises' ? '/obstacle-course.png' : cat === 'Defence' ? '/tactical-drills.png' : null;
-
             return (
-              <Link key={cat} href={`/category/${cat}`} className={`group relative p-8 ${hasCustomImage ? 'min-h-[220px]' : 'bg-slate-50'} rounded-3xl border border-slate-200 hover:border-blue-500 transition-all duration-500 overflow-hidden opacity-0 animate-fade-in-up stagger-${(index % 6) + 1}`}>
-                {bgImage && (
-                  <div className="absolute inset-0 z-0 opacity-40 group-hover:opacity-60 transition-opacity">
-                    <img src={bgImage} alt={cat} className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent"></div>
-                  </div>
-                )}
-                <div className="relative z-10 flex flex-col justify-end h-full">
-                  <div className={`h-14 w-14 mb-4 rounded-2xl ${hasCustomImage ? 'bg-blue-600 text-white' : 'bg-white text-slate-900'} flex items-center justify-center group-hover:scale-110 transition-transform duration-500 shadow-lg`}>
+              <Link key={cat} href={`/category/${cat}`} className={`group relative p-8 bg-slate-50 rounded-3xl border border-slate-200 hover:bg-slate-900 transition-all duration-500 overflow-hidden opacity-0 animate-fade-in-up stagger-${(index % 6) + 1}`}>
+                <div className="relative z-10 flex items-center space-x-4">
+                  <div className="h-14 w-14 rounded-2xl bg-white text-slate-900 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all duration-500 shadow-sm">
                     <Icon size={28} />
                   </div>
-                  <h3 className={`font-black text-xl ${hasCustomImage ? 'text-white' : 'text-slate-900'} font-heading tracking-tight`}>{cat}</h3>
+                  <h3 className="font-black text-lg text-slate-900 group-hover:text-white transition-colors font-heading tracking-tight">{cat}</h3>
+                </div>
+                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                   <Icon size={120} />
                 </div>
               </Link>
             );
