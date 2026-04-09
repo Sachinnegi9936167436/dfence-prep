@@ -32,35 +32,38 @@ export default async function Home() {
   return (
     <div className="space-y-24 relative pb-20">
       {/* Revolutionary Hero Section */}
-      <section className="relative -mt-10 pt-16 pb-24 overflow-hidden rounded-[3rem] shadow-2xl">
+      <section className="relative -mt-10 pt-24 pb-32 overflow-hidden rounded-[4rem] shadow-2xl group">
         <div className="absolute inset-0 z-0">
           <img 
-            src="/defence_prep_hero_bg_1775644941597.png" 
+            src="/hero-army.png" 
             alt="Defence Prep Tactical Background" 
-            className="w-full h-full object-cover scale-105 animate-float opacity-40"
+            className="w-full h-full object-cover scale-105 group-hover:scale-110 transition-transform duration-[10s] ease-out"
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-white via-white/80 to-blue-50/40 backdrop-blur-[2px]"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent"></div>
+          <div className="absolute inset-0 hero-overlay"></div>
         </div>
         
-        <div className="relative z-10 max-w-4xl mx-auto text-center px-6 space-y-8 opacity-0 animate-fade-in-up stagger-1">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600/10 text-blue-700 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-sm border border-blue-100">
-            <Shield className="h-3.5 w-3.5" />
-            Strategic Exam Intelligence
+        <div className="relative z-10 max-w-5xl mx-auto text-center px-6 space-y-10 opacity-0 animate-fade-in-up stagger-1">
+          <div className="inline-flex items-center gap-3 px-6 py-2 bg-blue-600 glass-panel text-white rounded-full text-[11px] font-black uppercase tracking-[0.3em] shadow-xl border-none">
+            <Shield className="h-4 w-4 animate-pulse-slow" />
+            Elite Strategic Academy
           </div>
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-slate-900 font-heading leading-tight">
-            Master Your Mission. <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Secure Your Future.</span>
+          <h1 className="text-5xl sm:text-7xl md:text-8xl font-black tracking-tighter text-white font-heading leading-[0.9] drop-shadow-2xl">
+            MASTER YOUR <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">MISSION READY.</span>
           </h1>
-          <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto font-medium leading-relaxed">
-            Revolutionary AI-powered preparation for CDS, NDA, and AFCAT. Precision-curated intelligence and tactical drills tailored for tomorrow's officers.
+          <p className="text-slate-200 text-lg sm:text-2xl max-w-2xl mx-auto font-medium leading-relaxed drop-shadow-lg">
+            Precision AI-powered intelligence for CDS, NDA, and AFCAT. The ultimate tactical advantage for modern officers.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <Link href="/daily-quiz" className="w-full sm:w-auto px-10 py-5 bg-slate-900 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-slate-800 transition-all shadow-xl shadow-slate-900/20 active:scale-95">
               Launch Today's Drill
             </Link>
-            <Link href="/register" className="w-full sm:w-auto px-10 py-5 bg-white text-slate-900 border-2 border-slate-200 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-slate-50 transition-all active:scale-95">
-              Join the Academy
-            </Link>
+            {!session && (
+              <Link href="/register" className="w-full sm:w-auto px-10 py-5 bg-white text-slate-900 border-2 border-slate-200 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-slate-50 transition-all active:scale-95">
+                Join the Academy
+              </Link>
+            )}
           </div>
         </div>
       </section>
@@ -93,16 +96,22 @@ export default async function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {['Defence', 'Sports', 'Awards', 'Books', 'Exercises', 'International Relations'].map((cat, index) => {
             const Icon = CAT_ICONS[cat];
+            const hasCustomImage = cat === 'Exercises' || cat === 'Defence';
+            const bgImage = cat === 'Exercises' ? '/obstacle-course.png' : cat === 'Defence' ? '/tactical-drills.png' : null;
+
             return (
-              <Link key={cat} href={`/category/${cat}`} className={`group relative p-8 bg-slate-50 rounded-3xl border border-slate-200 hover:bg-slate-900 transition-all duration-500 overflow-hidden opacity-0 animate-fade-in-up stagger-${(index % 6) + 1}`}>
-                <div className="relative z-10 flex items-center space-x-4">
-                  <div className="h-14 w-14 rounded-2xl bg-white text-slate-900 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all duration-500 shadow-sm">
+              <Link key={cat} href={`/category/${cat}`} className={`group relative p-8 ${hasCustomImage ? 'min-h-[220px]' : 'bg-slate-50'} rounded-3xl border border-slate-200 hover:border-blue-500 transition-all duration-500 overflow-hidden opacity-0 animate-fade-in-up stagger-${(index % 6) + 1}`}>
+                {bgImage && (
+                  <div className="absolute inset-0 z-0 opacity-40 group-hover:opacity-60 transition-opacity">
+                    <img src={bgImage} alt={cat} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent"></div>
+                  </div>
+                )}
+                <div className="relative z-10 flex flex-col justify-end h-full">
+                  <div className={`h-14 w-14 mb-4 rounded-2xl ${hasCustomImage ? 'bg-blue-600 text-white' : 'bg-white text-slate-900'} flex items-center justify-center group-hover:scale-110 transition-transform duration-500 shadow-lg`}>
                     <Icon size={28} />
                   </div>
-                  <h3 className="font-black text-lg text-slate-900 group-hover:text-white transition-colors font-heading tracking-tight">{cat}</h3>
-                </div>
-                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                   <Icon size={120} />
+                  <h3 className={`font-black text-xl ${hasCustomImage ? 'text-white' : 'text-slate-900'} font-heading tracking-tight`}>{cat}</h3>
                 </div>
               </Link>
             );
