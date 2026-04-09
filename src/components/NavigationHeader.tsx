@@ -68,7 +68,9 @@ export default function NavigationHeader({ session }: { session: any }) {
               )}
               <div className="flex flex-col items-end">
                 <span className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Candidate</span>
-                <span className="text-sm font-bold text-slate-800 truncate max-w-[120px]">{session.name || 'User'}</span>
+                <Link href="/dashboard" className="text-sm font-bold text-slate-800 hover:text-blue-600 transition-colors truncate max-w-[120px]">
+                  {session.name || 'User'}
+                </Link>
               </div>
               <LogoutButton />
             </div>
@@ -114,7 +116,7 @@ export default function NavigationHeader({ session }: { session: any }) {
                 <div className="flex items-center justify-between px-2">
                    <div className="flex flex-col leading-tight">
                       <span className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Signed in as</span>
-                      <span className="text-base font-black text-slate-900">{session.name || 'Officer Candidate'}</span>
+                      <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="text-base font-black text-slate-900 hover:text-blue-600 transition-colors">{session.name || 'Officer Candidate'}</Link>
                    </div>
                    {session.subscriptionStatus === 'active' && (
                      <span className="bg-green-100 text-green-700 text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest">PREMIUM</span>
