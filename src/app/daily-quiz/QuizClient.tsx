@@ -12,10 +12,12 @@ export default function QuizClient() {
   const [isAnswered, setIsAnswered] = useState(false);
   const [score, setScore] = useState(0);
   const [showResults, setShowResults] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const fetchQuiz = () => {
     setLoading(true);
+    setError(null);
     setCurrentIndex(0);
     setSelectedOption(null);
     setIsAnswered(false);
@@ -25,7 +27,6 @@ export default function QuizClient() {
       .then(res => res.json())
       .then(data => {
         if (data.success && data.quizzes) {
-          // Shuffle both the quiz order AND each question's options
           const shuffled = data.quizzes
             .sort(() => Math.random() - 0.5)
             .map((quiz: any) => ({
@@ -33,11 +34,14 @@ export default function QuizClient() {
               options: [...quiz.options].sort(() => Math.random() - 0.5),
             }));
           setQuizzes(shuffled);
+        } else {
+          setError(data.error || 'Tactical data unavailable. Please reconnect.');
         }
         setLoading(false);
       })
       .catch(err => {
         console.error(err);
+        setError('Communication error with Command Center. Check your network.');
         setLoading(false);
       });
   };
@@ -61,16 +65,20 @@ export default function QuizClient() {
       setIsAnswered(false);
     } else {
       setShowResults(true);
-      submitScore(score + (selectedOption === quizzes[currentIndex].correctAnswer ? 1 : 0));
+      submitScore(score);
     }
   };
 
   const submitScore = async (finalScore: number) => {
     try {
+      // Prioritize identifying user via the API if localStorage is missing
       const email = localStorage.getItem('userEmail');
-      if (!email) return;
+      if (!email) {
+        console.warn('Score submission paused: No user identity confirmed.');
+        return;
+      }
       
-      await fetch('/api/quizzes/submit', {
+      const response = await fetch('/api/quizzes/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -79,6 +87,10 @@ export default function QuizClient() {
           totalQuestions: quizzes.length 
         })
       });
+
+      if (!response.ok) {
+        throw new Error('Mission report failed to upload.');
+      }
     } catch (err) {
       console.error('Failed to submit score', err);
     }
@@ -89,6 +101,21 @@ export default function QuizClient() {
       <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4">
         <Loader2 className="h-10 w-10 text-blue-600 animate-spin" />
         <p className="text-slate-500 font-medium">Loading today's challenge...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-6 text-center">
+        <div className="h-20 w-20 bg-red-50 text-red-600 rounded-full flex items-center justify-center mb-4">
+          <XCircle className="h-10 w-10" />
+        </div>
+        <h2 className="text-2xl font-bold text-slate-900">Tactical Intel Lost</h2>
+        <p className="text-slate-500 max-w-sm">{error}</p>
+        <button onClick={fetchQuiz} className="px-8 py-3 bg-slate-900 text-white rounded-full font-bold uppercase tracking-widest text-xs hover:bg-slate-800 transition shadow-xl">
+          🔄 Retry Connection
+        </button>
       </div>
     );
   }

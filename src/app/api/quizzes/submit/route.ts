@@ -7,22 +7,30 @@ export async function POST(req: Request) {
     await connectToDatabase();
     
     const body = await req.json();
-    const { email, name, score, totalQuestions } = body;
+    const { email, score, totalQuestions } = body;
 
     if (!email) {
+      console.error('Submission Error: Missing email');
       return NextResponse.json({ error: 'Email is required' }, { status: 400 });
     }
 
-    let user = await User.findOne({ email });
+    console.log(`Processing submisson for ${email}: Score ${score}/${totalQuestions}`);
+
+    // Case-insensitive search for the user
+    let user = await User.findOne({ 
+      email: { $regex: new RegExp(`^${email}$`, 'i') } 
+    });
     
     if (!user) {
-      user = new User({ email, name, score, quizzesAttempted: 1 });
-    } else {
-      user.score += score;
-      user.quizzesAttempted += 1;
+      console.warn(`User not found for email: ${email}. Scoring ignored.`);
+      return NextResponse.json({ error: 'User profile not found' }, { status: 404 });
     }
 
+    user.score = (user.score || 0) + score;
+    user.quizzesAttempted = (user.quizzesAttempted || 0) + 1;
+
     await user.save();
+    console.log(`Successfully updated profile for ${email}. New Score: ${user.score}`);
 
     return NextResponse.json({ success: true, user });
   } catch (error: any) {
