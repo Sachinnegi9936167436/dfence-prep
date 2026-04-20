@@ -146,6 +146,15 @@ export default function QuizClient() {
         <p className="text-lg text-slate-500">You scored <strong>{score}</strong> out of <strong>{quizzes.length}</strong> ({percentage}%)</p>
         
         <div className="pt-6 border-t mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+          <button 
+            onClick={() => {
+              const text = `I just scored ${score}/${quizzes.length} on today's Tactical Drill at Dfence Prep! Can you beat my score? 🎯\n\nTake the challenge: https://dfenceprep.com`;
+              window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+            }} 
+            className="px-8 py-3 bg-[#25D366] text-white rounded-full font-semibold hover:bg-[#128C7E] transition shadow-md"
+          >
+            Share on WhatsApp
+          </button>
           <button onClick={fetchQuiz} className="px-8 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition">
             🔀 Retake with Shuffled Questions
           </button>

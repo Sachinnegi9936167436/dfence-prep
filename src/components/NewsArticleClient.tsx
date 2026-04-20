@@ -135,6 +135,15 @@ export default function NewsArticleClient({ article, index }: { article: Article
                     View Original Source <ExternalLink className="h-3 w-3 ml-1" />
                   </a>
                   <button 
+                    onClick={() => {
+                      const text = `Read this on Dfence Prep: ${article.title}\n\nhttps://dfenceprep.com`;
+                      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+                    }}
+                    className="w-full sm:w-auto px-8 py-3 bg-[#25D366] text-white rounded-2xl font-bold hover:bg-[#128C7E] transition-all shadow-md active:scale-95 flex items-center justify-center"
+                  >
+                    Share on WhatsApp
+                  </button>
+                  <button 
                     onClick={toggleModal}
                     className="w-full sm:w-auto px-8 py-3 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-all shadow-md active:scale-95"
                   >

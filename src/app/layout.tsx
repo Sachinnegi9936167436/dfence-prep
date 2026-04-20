@@ -13,6 +13,20 @@ const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit' })
 export const metadata: Metadata = {
   title: 'Dfence Prep | AI-Powered Defence Exam Mastery',
   description: 'Daily curated news, strategic AI quizzes, and tactical MCQ practice for CDS, NDA, AFCAT, and more.',
+  openGraph: {
+    title: 'Dfence Prep | AI-Powered Defence Exam Mastery',
+    description: 'Daily curated news, strategic AI quizzes, and tactical MCQ practice for CDS, NDA, AFCAT, and more.',
+    type: 'website',
+    url: 'https://dfenceprep.com',
+    siteName: 'Dfence Prep',
+    images: [{ url: '/hero-army.png' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Dfence Prep | AI-Powered Defence Exam Mastery',
+    description: 'Daily curated news, strategic AI quizzes, and tactical MCQ practice for CDS, NDA, AFCAT, and more.',
+    images: ['/hero-army.png'],
+  }
 }
 
 export default async function RootLayout({
