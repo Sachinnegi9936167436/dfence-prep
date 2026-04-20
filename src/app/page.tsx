@@ -56,7 +56,7 @@ export default async function Home() {
             Precision AI-powered intelligence for CDS, NDA, and AFCAT. The ultimate tactical advantage for modern officers.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-            <Link href="/daily-quiz" className="w-full sm:w-auto px-10 py-5 bg-slate-900 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-slate-800 transition-all shadow-xl shadow-slate-900/20 active:scale-95">
+            <Link href="/daily-quiz" className="w-full sm:w-auto px-10 py-5 bg-gradient-to-r from-blue-600 to-indigo-500 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:scale-105 transition-all shadow-[0_0_40px_rgba(37,99,235,0.4)] hover:shadow-[0_0_60px_rgba(37,99,235,0.6)] active:scale-95 border border-blue-400/30">
               Launch Today's Drill
             </Link>
             {!session && (
