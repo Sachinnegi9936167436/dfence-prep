@@ -29,6 +29,7 @@ const UserSchema: Schema = new Schema({
   quizzesAttempted: { type: Number, default: 0 },
   streak: { type: Number, default: 0 },
   lastQuizDate: { type: Date },
+  pushSubscription: { type: Object, default: null },
   subscriptionStatus: { 
     type: String, 
     enum: ['active', 'inactive', 'pending'], 

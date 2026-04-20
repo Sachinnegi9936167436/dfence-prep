@@ -11,8 +11,24 @@ import {
   MessageSquare,
   Loader2,
   TrendingUp,
-  Clock
+  Clock,
+  Bell
 } from 'lucide-react';
+
+function urlBase64ToUint8Array(base64String: string) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding)
+    .replace(/\-/g, '+')
+    .replace(/_/g, '/');
+
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
 
 interface UserStats {
   name: string;
@@ -30,7 +46,33 @@ interface UserStats {
 export default function DashboardPage() {
   const [stats, setStats] = useState<UserStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [pushStatus, setPushStatus] = useState<string>('');
   const router = useRouter();
+
+  const handleSubscribePush = async () => {
+    setPushStatus('loading');
+    if ('serviceWorker' in navigator && 'PushManager' in window) {
+      try {
+        const registration = await navigator.serviceWorker.register('/sw.js');
+        const subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || '')
+        });
+
+        await fetch('/api/user/push-subscribe', {
+          method: 'POST',
+          body: JSON.stringify({ subscription }),
+          headers: { 'Content-Type': 'application/json' },
+        });
+        setPushStatus('subscribed');
+      } catch (e) {
+        console.error(e);
+        setPushStatus('error');
+      }
+    } else {
+      setPushStatus('unsupported');
+    }
+  };
 
   useEffect(() => {
     fetch('/api/user/stats')
@@ -141,6 +183,25 @@ export default function DashboardPage() {
 
         {/* Right Column: Stats Grid */}
         <div className="space-y-6">
+           <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 rounded-3xl text-white shadow-xl shadow-blue-500/20 mb-8 relative overflow-hidden flex flex-col justify-between group">
+              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
+                <Bell size={100} />
+              </div>
+              <div className="relative z-10">
+                <h4 className="font-black text-lg mb-1 leading-tight">Enable Tactical Alerts</h4>
+                <p className="text-blue-100 text-xs mb-4">Never miss a daily drill and lose your streak.</p>
+                {pushStatus === 'subscribed' ? (
+                  <span className="inline-flex items-center text-xs font-black uppercase tracking-widest text-[#25D366] bg-white/10 px-4 py-2 rounded-xl">Alerts Active ✓</span>
+                ) : pushStatus === 'loading' ? (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                ) : (
+                  <button onClick={handleSubscribePush} className="w-full bg-white text-blue-900 py-3 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-blue-50 transition active:scale-95 shadow-md">
+                    Allow Notifications
+                  </button>
+                )}
+              </div>
+           </div>
+
            <div className="text-xs font-black text-slate-400 uppercase tracking-[0.3em] mb-4 pl-4 border-l-4 border-slate-200">Personnel Dossier</div>
            
            <div className="glass-panel p-6 rounded-3xl flex items-center gap-5 transition-all hover:-translate-y-1 hover:shadow-xl group">
