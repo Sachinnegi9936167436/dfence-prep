@@ -9,6 +9,7 @@ export interface IUser extends Document {
   streak: number;
   lastQuizDate?: Date;
   badges?: string[];
+  pushSubscription?: any;
   subscriptionStatus: 'active' | 'inactive' | 'pending';
   subscriptionExpiry: Date | null;
   role: 'admin' | 'user';
