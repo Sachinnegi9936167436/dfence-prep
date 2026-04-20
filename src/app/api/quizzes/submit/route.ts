@@ -29,6 +29,25 @@ export async function POST(req: Request) {
     user.score = (user.score || 0) + score;
     user.quizzesAttempted = (user.quizzesAttempted || 0) + 1;
 
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    if (user.lastQuizDate) {
+      const lastDate = new Date(user.lastQuizDate);
+      const lastQuizDay = new Date(lastDate.getFullYear(), lastDate.getMonth(), lastDate.getDate());
+      
+      const diffTime = Math.abs(today.getTime() - lastQuizDay.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+      
+      if (diffDays === 1) {
+        user.streak = (user.streak || 0) + 1;
+      } else if (diffDays > 1) {
+        user.streak = 1;
+      }
+    } else {
+      user.streak = 1;
+    }
+    user.lastQuizDate = now;
+
     await user.save();
     console.log(`Successfully updated profile for ${email}. New Score: ${user.score}`);
 

@@ -6,6 +6,8 @@ export interface IUser extends Document {
   name?: string;
   score: number;
   quizzesAttempted: number;
+  streak: number;
+  lastQuizDate?: Date;
   subscriptionStatus: 'active' | 'inactive' | 'pending';
   subscriptionExpiry: Date | null;
   role: 'admin' | 'user';
@@ -25,6 +27,8 @@ const UserSchema: Schema = new Schema({
   name: { type: String },
   score: { type: Number, default: 0 },
   quizzesAttempted: { type: Number, default: 0 },
+  streak: { type: Number, default: 0 },
+  lastQuizDate: { type: Date },
   subscriptionStatus: { 
     type: String, 
     enum: ['active', 'inactive', 'pending'], 

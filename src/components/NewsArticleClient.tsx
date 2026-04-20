@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Clock, BookOpen, X, ExternalLink, Shield, Trophy, Medal, Globe, Dumbbell } from 'lucide-react';
+import React from 'react';
+import { useRouter } from 'next/navigation';
+import { Clock, BookOpen, Shield, Trophy, Medal, Globe, Dumbbell } from 'lucide-react';
 
 const CAT_ICONS: Record<string, any> = {
   Defence: Shield,
@@ -24,15 +25,13 @@ interface Article {
 }
 
 export default function NewsArticleClient({ article, index }: { article: Article; index: number }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const router = useRouter();
   const Icon = CAT_ICONS[article.category] || BookOpen;
-
-  const toggleModal = () => setIsModalOpen(!isModalOpen);
 
   return (
     <>
       <div 
-        onClick={toggleModal}
+        onClick={() => router.push(`/article/${article._id}`)}
         className={`bg-white rounded-[2rem] shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 overflow-hidden flex flex-col hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-all duration-500 opacity-0 animate-fade-in-up stagger-${(index % 6) + 1} group cursor-pointer h-full`}
       >
         {article.imageUrl && (
@@ -67,94 +66,6 @@ export default function NewsArticleClient({ article, index }: { article: Article
         </div>
       </div>
 
-      {/* Modal Overlay */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300">
-          <div 
-            className="bg-white w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-[2.5rem] shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Header / Image Area */}
-            <div className="relative h-48 sm:h-64 shrink-0">
-              {article.imageUrl ? (
-                <img src={article.imageUrl} alt={article.title} className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center">
-                   <Icon className="h-20 w-20 text-white/20" />
-                </div>
-              )}
-              <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
-              <button 
-                onClick={toggleModal}
-                className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm p-2 rounded-full text-slate-900 hover:bg-white hover:scale-110 transition-all shadow-lg"
-              >
-                <X className="h-5 w-5" />
-              </button>
-              <div className="absolute bottom-6 left-8 right-8">
-                 <span className="inline-block px-3 py-1.5 rounded-full bg-blue-600 text-white text-[10px] font-bold uppercase tracking-widest mb-3 shadow-lg">{article.category}</span>
-                 <h2 className="text-xl sm:text-2xl font-black text-slate-900 leading-tight drop-shadow-sm">{article.title}</h2>
-              </div>
-            </div>
-
-            {/* Content Area */}
-            <div className="flex-1 overflow-y-auto p-8 pt-2">
-              <div className="space-y-6">
-                <div className="flex items-center text-xs text-slate-400 font-medium">
-                   <Clock className="h-3.5 w-3.5 mr-1.5" />
-                   Published on {new Date(article.publishedAt).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
-                </div>
-
-                <div className="bg-blue-50/50 border border-blue-100 rounded-3xl p-6 sm:p-8">
-                  <h4 className="text-blue-800 font-bold text-sm uppercase tracking-widest mb-4 flex items-center">
-                    <BookOpen className="h-4 w-4 mr-2" />
-                    AI-Generated Summary
-                  </h4>
-                  <div className="prose prose-slate max-w-none prose-p:text-slate-700 prose-p:leading-relaxed prose-li:text-slate-700">
-                    {article.summary ? (
-                      <div className="whitespace-pre-line text-slate-700 font-medium leading-loose">
-                        {article.summary.split('\n').map((line, i) => (
-                          <div key={i} className="mb-2 flex items-start">
-                             <span className="text-blue-500 mr-2 shrink-0">•</span>
-                             <span>{line.replace(/^[•\-\*]\s*/, '')}</span>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="italic text-slate-500">{article.content.substring(0, 500)}...</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <a 
-                    href={article.sourceUrl} 
-                    target="_blank" 
-                    rel="noreferrer" 
-                    className="flex items-center text-slate-400 hover:text-blue-600 transition-colors text-xs font-semibold"
-                  >
-                    View Original Source <ExternalLink className="h-3 w-3 ml-1" />
-                  </a>
-                  <button 
-                    onClick={() => {
-                      const text = `Read this on Dfence Prep: ${article.title}\n\nhttps://dfenceprep.com`;
-                      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
-                    }}
-                    className="w-full sm:w-auto px-8 py-3 bg-[#25D366] text-white rounded-2xl font-bold hover:bg-[#128C7E] transition-all shadow-md active:scale-95 flex items-center justify-center"
-                  >
-                    Share on WhatsApp
-                  </button>
-                  <button 
-                    onClick={toggleModal}
-                    className="w-full sm:w-auto px-8 py-3 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-all shadow-md active:scale-95"
-                  >
-                    Close Summary
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }

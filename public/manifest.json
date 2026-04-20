@@ -1,0 +1,21 @@
+{
+  "name": "Dfence Prep",
+  "short_name": "DfencePrep",
+  "description": "AI-Powered Defence Exam Mastery for CDS, NDA, AFCAT.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e293b",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "192x192",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "512x512",
+      "type": "image/x-icon"
+    }
+  ]
+}

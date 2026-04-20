@@ -16,6 +16,7 @@ export default function NavigationHeader({ session }: { session: any }) {
   }
 
   const navLinks = [
+    { name: 'Rankings', path: '/leaderboard' },
     { name: 'Defence', path: '/category/Defence' },
     { name: 'Sports', path: '/category/Sports' },
     { name: 'Awards', path: '/category/Awards' },

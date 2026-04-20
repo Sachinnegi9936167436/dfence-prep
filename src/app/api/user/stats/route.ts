@@ -60,6 +60,7 @@ export async function GET() {
         rank: currentRank.name,
         nextRank: nextRank?.name || 'Max Rank Reached',
         progress,
+        streak: user.streak || 0,
         fieldReport
       }
     });

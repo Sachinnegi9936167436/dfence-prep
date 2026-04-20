@@ -23,6 +23,7 @@ interface UserStats {
   rank: string;
   nextRank: string;
   progress: number;
+  streak: number;
   fieldReport: string;
 }
 
@@ -169,6 +170,16 @@ export default function DashboardPage() {
               <div>
                  <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Mission Accuracy</div>
                  <div className="text-2xl font-black text-slate-900 font-heading">{stats.accuracy}%</div>
+              </div>
+           </div>
+
+           <div className="glass-panel p-6 rounded-3xl flex items-center gap-5 transition-all hover:-translate-y-1 hover:shadow-xl group">
+              <div className="h-12 w-12 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center transition-colors group-hover:bg-orange-600 group-hover:text-white">
+                 <span className="text-2xl">🔥</span>
+              </div>
+              <div>
+                 <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active Streak</div>
+                 <div className="text-2xl font-black text-slate-900 font-heading">{stats.streak} Days</div>
               </div>
            </div>
 
