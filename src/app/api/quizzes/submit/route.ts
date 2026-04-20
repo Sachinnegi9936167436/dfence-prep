@@ -48,6 +48,30 @@ export async function POST(req: Request) {
     }
     user.lastQuizDate = now;
 
+    // Gamification: Badge Assignment Engine
+    const currentBadges = user.badges || [];
+    let badgeAwarded = false;
+    
+    if (score === totalQuestions && score > 0 && !currentBadges.includes('Sniper Badge')) {
+      currentBadges.push('Sniper Badge');
+      badgeAwarded = true;
+    }
+
+    const currentHour = now.getHours();
+    if (currentHour >= 0 && currentHour < 4 && !currentBadges.includes('Night Owl Badge')) {
+      currentBadges.push('Night Owl Badge');
+      badgeAwarded = true;
+    }
+
+    if (user.streak >= 30 && !currentBadges.includes('Veteran Badge')) {
+      currentBadges.push('Veteran Badge');
+      badgeAwarded = true;
+    }
+
+    if (badgeAwarded) {
+      user.badges = currentBadges;
+    }
+
     await user.save();
     console.log(`Successfully updated profile for ${email}. New Score: ${user.score}`);
 

@@ -61,6 +61,7 @@ export async function GET() {
         nextRank: nextRank?.name || 'Max Rank Reached',
         progress,
         streak: user.streak || 0,
+        badges: user.badges || [],
         fieldReport
       }
     });

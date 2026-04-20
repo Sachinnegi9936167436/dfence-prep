@@ -211,9 +211,15 @@ export default function QuizClient() {
         </div>
 
         {isAnswered && (
-          <div className="p-6 bg-slate-50/80 backdrop-blur rounded-2xl border border-slate-200 mt-6 opacity-0 animate-fade-in-up">
-            <h4 className="font-extrabold text-slate-900 mb-2">Explanation:</h4>
-            <p className="text-slate-600 text-sm leading-relaxed">{currentQuiz.explanation}</p>
+          <div className={`p-6 backdrop-blur rounded-2xl border mt-6 opacity-0 animate-fade-in-up transition-colors duration-500 ${selectedOption === currentQuiz.correctAnswer ? 'bg-green-50/80 border-green-200' : 'bg-red-50/80 border-red-200'}`}>
+            <h4 className={`font-extrabold mb-2 ${selectedOption === currentQuiz.correctAnswer ? 'text-green-900' : 'text-red-900'}`}>
+              {selectedOption === currentQuiz.correctAnswer ? 'Strategic Affirmation:' : 'Commander\'s Reprimand:'}
+            </h4>
+            <p className={`text-sm leading-relaxed ${selectedOption === currentQuiz.correctAnswer ? 'text-green-800' : 'text-red-800 font-medium'}`}>
+              {selectedOption === currentQuiz.correctAnswer 
+                ? currentQuiz.explanation 
+                : (currentQuiz.hostileExplanation || currentQuiz.explanation)}
+            </p>
           </div>
         )}
 

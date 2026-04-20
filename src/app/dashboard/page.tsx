@@ -12,7 +12,9 @@ import {
   Loader2,
   TrendingUp,
   Clock,
-  Bell
+  Bell,
+  Moon,
+  Star
 } from 'lucide-react';
 
 function urlBase64ToUint8Array(base64String: string) {
@@ -40,6 +42,7 @@ interface UserStats {
   nextRank: string;
   progress: number;
   streak: number;
+  badges: string[];
   fieldReport: string;
 }
 
@@ -171,12 +174,44 @@ export default function DashboardPage() {
                 <blockquote className="text-lg sm:text-2xl font-medium font-heading leading-snug italic text-slate-200">
                    "{stats.fieldReport}"
                 </blockquote>
-                <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
+                 <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Source: Command AI 2.0</span>
                    <button onClick={() => router.push('/daily-quiz')} className="flex items-center gap-2 text-xs font-black text-blue-400 hover:text-blue-300 transition-colors uppercase tracking-widest">
                       Enter Drill Zone <ChevronRight size={14} />
                    </button>
                 </div>
+             </div>
+          </div>
+
+          {/* Trophy Room Badge Display */}
+          <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+             <div className="flex items-center gap-3 mb-6">
+                <div className="h-10 w-10 bg-yellow-50 text-yellow-600 rounded-xl flex items-center justify-center">
+                   <Award size={20} />
+                </div>
+                <h3 className="text-xl font-black text-slate-900 font-heading">Trophy Room</h3>
+             </div>
+             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+               {stats.badges && stats.badges.length > 0 ? (
+                 stats.badges.map((badge, idx) => {
+                   let Icon = Award;
+                   let colors = "bg-slate-50 text-slate-600";
+                   if (badge === 'Sniper Badge') { Icon = Target; colors = "bg-red-50 text-red-600 border-red-100"; }
+                   if (badge === 'Night Owl Badge') { Icon = Moon; colors = "bg-indigo-50 text-indigo-600 border-indigo-100"; }
+                   if (badge === 'Veteran Badge') { Icon = Star; colors = "bg-yellow-50 text-yellow-600 border-yellow-100"; }
+                   
+                   return (
+                     <div key={idx} className={`flex flex-col items-center justify-center text-center p-4 rounded-2xl border ${colors} shadow-sm group`}>
+                        <Icon size={28} className="mb-2 group-hover:scale-110 transition-transform" />
+                        <span className="text-[10px] font-black uppercase tracking-widest leading-tight">{badge}</span>
+                     </div>
+                   )
+                 })
+               ) : (
+                 <div className="col-span-full p-8 rounded-2xl border-2 border-dashed border-slate-100 text-center text-slate-400 font-bold text-xs uppercase tracking-widest">
+                   No badges unlocked yet. Complete missions to earn medals.
+                 </div>
+               )}
              </div>
           </div>
         </div>

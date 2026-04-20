@@ -9,6 +9,7 @@ export interface GeneratedQuiz {
   options: string[];
   correctAnswer: string;
   explanation: string;
+  hostileExplanation?: string;
 }
 
 export async function generateMCQsFromText(text: string, category: string): Promise<GeneratedQuiz[]> {
@@ -37,6 +38,7 @@ export async function generateMCQsFromText(text: string, category: string): Prom
         ],
         correctAnswer: s1.substring(0, 80),
         explanation: `${s1}. This reflects the latest developments in the ${category} domain that are relevant to current affairs for defence examinations.`,
+        hostileExplanation: `Negative, Cadet. Your situational awareness is lacking. The correct intel is: ${s1.substring(0, 60)}...`
       },
       {
         question: `In the context of ${category}, consider the following statement: "${s2.substring(0, 60)}..." — what does this indicate?`,
@@ -48,6 +50,7 @@ export async function generateMCQsFromText(text: string, category: string): Prom
         ],
         correctAnswer: `Significant progress and activity in the ${category} sector`,
         explanation: `${s2}. This statement highlights ongoing activity and development in the ${category} field, which is frequently examined in CDS, NDA, and AFCAT papers.`,
+        hostileExplanation: `Recalibrate your focus! The correct strategic assessment is significant progress in the ${category} sector. Keep up.`
       },
       {
         question: `Which of the following best describes the current focus in the domain of ${category} as per recent reports?`,
@@ -59,6 +62,7 @@ export async function generateMCQsFromText(text: string, category: string): Prom
         ],
         correctAnswer: `Active engagement and strategic updates`,
         explanation: `${s3}. Recent developments indicate active engagement and updates in ${category}, a topic of importance for aspirants of CDS, NDA, and AFCAT examinations.`,
+        hostileExplanation: `Incorrect. An officer must know this. The domain of ${category} is seeing active engagement and updates.`
       },
     ];
   };
@@ -83,7 +87,8 @@ STRICT RULES FOR QUESTION STYLE:
 4. Difficulty should be moderate to hard — not trivially easy.
 5. The explanation must be concise (2-3 sentences), factual, and exam-oriented.
 6. Do NOT use phrases like "Based on the article" or "According to the text" — write standalone questions as they appear in a real question paper.
-7. Ensure correctAnswer is EXACTLY one of the 4 options (character-for-character match).
+8. Ensure correctAnswer is EXACTLY one of the 4 options (character-for-character match).
+9. Add a "hostileExplanation" field: a strict, 2-sentence military-style reprimand instructing the cadet why they failed and what the correct answer was. Start with phrases like 'Negative, Cadet.' or 'Recalibrate your focus.'
 
 Respond ONLY with a valid JSON object — no markdown, no extra text:
 {
@@ -92,7 +97,8 @@ Respond ONLY with a valid JSON object — no markdown, no extra text:
       "question": "...",
       "options": ["...", "...", "...", "..."],
       "correctAnswer": "...",
-      "explanation": "..."
+      "explanation": "...",
+      "hostileExplanation": "..."
     }
   ]
 }

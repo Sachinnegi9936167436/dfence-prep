@@ -6,6 +6,7 @@ export interface IQuiz extends Document {
   options: string[];
   correctAnswer: string; // Must match one of the options
   explanation: string;
+  hostileExplanation?: string;
   category: 'Defence' | 'Sports' | 'Awards' | 'Books' | 'Exercises' | 'International Relations';
   createdAt: Date;
 }
@@ -16,6 +17,7 @@ const QuizSchema: Schema = new Schema({
   options: [{ type: String, required: true }],
   correctAnswer: { type: String, required: true },
   explanation: { type: String, required: true },
+  hostileExplanation: { type: String },
   category: {
     type: String,
     required: true,
