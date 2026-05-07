@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { CheckCircle2, XCircle, ArrowRight, Loader2, Trophy, Lock, Sparkles, Gem } from 'lucide-react';
 import PremiumBadge from '@/components/PremiumBadge';
 import { getSession } from '@/lib/auth';
+import Link from 'next/link';
 
 export default function QuizClient() {
   const [quizzes, setQuizzes] = useState<any[]>([]);
