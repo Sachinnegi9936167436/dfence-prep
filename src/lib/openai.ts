@@ -1,8 +1,13 @@
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import OpenAI from 'openai';
 
+// Initialize OpenAI
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || '',
 });
+
+// Initialize Gemini
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 export interface GeneratedQuiz {
   question: string;
@@ -12,154 +17,154 @@ export interface GeneratedQuiz {
   hostileExplanation?: string;
 }
 
-export async function generateMCQsFromText(text: string, category: string): Promise<GeneratedQuiz[]> {
-  const fallbackQuizzes = (_reason: string): GeneratedQuiz[] => {
-    // Extract meaningful sentences from the article text
-    const sentences = text
-      .split(/[.!?]/)
-      .map(s => s.trim())
-      .filter(s => s.length > 40 && s.length < 200);
+const fallbackQuizzes = (text: string, category: string): GeneratedQuiz[] => {
+  const sentences = text
+    .split(/[.!?]/)
+    .map(s => s.trim())
+    .filter(s => s.length > 40 && s.length < 200);
 
-    // Helper to pick a sentence by index (looping if not enough sentences)
-    const getSentence = (i: number) => sentences[i % Math.max(sentences.length, 1)] || `${category} related development`;
+  const getSentence = (i: number) => sentences[i % Math.max(sentences.length, 1)] || `${category} related development`;
 
-    const s1 = getSentence(0);
-    const s2 = getSentence(1);
-    const s3 = getSentence(2);
+  const s1 = getSentence(0);
+  const s2 = getSentence(1);
+  const s3 = getSentence(2);
 
-    return [
-      {
-        question: `With reference to recent ${category} developments, which of the following statements is most accurate?`,
-        options: [
-          s1.substring(0, 80),
-          `There have been no significant changes in the ${category} sector recently`,
-          `The ${category} situation remains unchanged from last quarter`,
-          `International agencies have suspended ${category}-related activities`,
-        ],
-        correctAnswer: s1.substring(0, 80),
-        explanation: `${s1}. This reflects the latest developments in the ${category} domain that are relevant to current affairs for defence examinations.`,
-        hostileExplanation: `Negative, Cadet. Your situational awareness is lacking. The correct intel is: ${s1.substring(0, 60)}...`
-      },
-      {
-        question: `In the context of ${category}, consider the following statement: "${s2.substring(0, 60)}..." — what does this indicate?`,
-        options: [
-          `Significant progress and activity in the ${category} sector`,
-          `A decline in ${category} related engagements`,
-          `Withdrawal from international ${category} commitments`,
-          `A pause in ongoing ${category} operations`,
-        ],
-        correctAnswer: `Significant progress and activity in the ${category} sector`,
-        explanation: `${s2}. This statement highlights ongoing activity and development in the ${category} field, which is frequently examined in CDS, NDA, and AFCAT papers.`,
-        hostileExplanation: `Recalibrate your focus! The correct strategic assessment is significant progress in the ${category} sector. Keep up.`
-      },
-      {
-        question: `Which of the following best describes the current focus in the domain of ${category} as per recent reports?`,
-        options: [
-          `Active engagement and strategic updates`,
-          `Complete diplomatic freeze on ${category} matters`,
-          `Reduction in budgetary allocation for ${category}`,
-          `Transfer of ${category} responsibilities to state governments`,
-        ],
-        correctAnswer: `Active engagement and strategic updates`,
-        explanation: `${s3}. Recent developments indicate active engagement and updates in ${category}, a topic of importance for aspirants of CDS, NDA, and AFCAT examinations.`,
-        hostileExplanation: `Incorrect. An officer must know this. The domain of ${category} is seeing active engagement and updates.`
-      },
-    ];
-  };
-
-  if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'your-key-here') {
-    return fallbackQuizzes("OpenAI API Key is missing or default");
-  }
-
-  const prompt = `
-You are a subject-matter expert and question paper setter for Indian Defence entrance examinations — CDS (Combined Defence Services), NDA (National Defence Academy), and AFCAT (Air Force Common Admission Test).
-
-Your task: Based on the news article below (category: ${category}), generate exactly 3 MCQs in the authentic style of CDS/NDA/AFCAT exams.
-
-STRICT RULES FOR QUESTION STYLE:
-1. Use concise, formal language exactly as seen in CDS/NDA/AFCAT papers. No conversational tone.
-2. Vary the question types across the 3 questions — use different openers such as:
-   - "Which of the following..." / "Consider the following statements..."
-   - "Who among the following..." / "With reference to..."
-   - "What is/was..." / "In the context of..."
-   - Assertion (A) and Reason (R) format where the candidate picks which is correct.
-3. Options must be realistic and plausible — avoid obviously silly distractors. All 4 options must look like they could be correct to an unprepared candidate, exactly like real exam options.
-4. Difficulty should be moderate to hard — not trivially easy.
-5. The explanation must be concise (2-3 sentences), factual, and exam-oriented.
-6. Do NOT use phrases like "Based on the article" or "According to the text" — write standalone questions as they appear in a real question paper.
-8. Ensure correctAnswer is EXACTLY one of the 4 options (character-for-character match).
-9. Add a "hostileExplanation" field: a strict, 2-sentence military-style reprimand instructing the cadet why they failed and what the correct answer was. Start with phrases like 'Negative, Cadet.' or 'Recalibrate your focus.'
-
-Respond ONLY with a valid JSON object — no markdown, no extra text:
-{
-  "quizzes": [
+  return [
     {
-      "question": "...",
-      "options": ["...", "...", "...", "..."],
-      "correctAnswer": "...",
-      "explanation": "...",
-      "hostileExplanation": "..."
-    }
-  ]
-}
+      question: `With reference to recent ${category} developments, which of the following statements is most accurate?`,
+      options: [
+        s1.substring(0, 80),
+        `There have been no significant changes in the ${category} sector recently`,
+        `The ${category} situation remains unchanged from last quarter`,
+        `International agencies have suspended ${category}-related activities`,
+      ],
+      correctAnswer: s1.substring(0, 80),
+      explanation: `${s1}. This reflects the latest developments in the ${category} domain that are relevant to current affairs for defence examinations.`,
+      hostileExplanation: `Negative, Cadet. Your situational awareness is lacking. The correct intel is: ${s1.substring(0, 60)}...`
+    },
+    {
+      question: `In the context of ${category}, consider the following statement: "${s2.substring(0, 60)}..." — what does this indicate?`,
+      options: [
+        `Significant progress and activity in the ${category} sector`,
+        `A decline in ${category} related engagements`,
+        `Withdrawal from international ${category} commitments`,
+        `A pause in ongoing ${category} operations`,
+      ],
+      correctAnswer: `Significant progress and activity in the ${category} sector`,
+      explanation: `${s2}. This statement highlights ongoing activity and development in the ${category} field, which is frequently examined in CDS, NDA, and AFCAT papers.`,
+      hostileExplanation: `Recalibrate your focus! The correct strategic assessment is significant progress in the ${category} sector. Keep up.`
+    },
+    {
+      question: `Which of the following best describes the current focus in the domain of ${category} as per recent reports?`,
+      options: [
+        `Active engagement and strategic updates`,
+        `Complete diplomatic freeze on ${category} matters`,
+        `Reduction in budgetary allocation for ${category}`,
+        `Transfer of ${category} responsibilities to state governments`,
+      ],
+      correctAnswer: `Active engagement and strategic updates`,
+      explanation: `${s3}. Recent developments indicate active engagement and updates in ${category}, a topic of importance for aspirants of CDS, NDA, and AFCAT examinations.`,
+      hostileExplanation: `Incorrect. An officer must know this. The domain of ${category} is seeing active engagement and updates.`
+    },
+  ];
+};
 
-News article text:
-"${text.substring(0, 2500)}"
-`;
-
-  try {
-    const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0.5,
-      response_format: { type: 'json_object' }
-    });
-
-    const content = response.choices[0].message.content;
-    if (!content) return fallbackQuizzes("AI returned empty response");
-    
-    const parsed = JSON.parse(content);
-    if (parsed.quizzes && Array.isArray(parsed.quizzes)) {
-      return parsed.quizzes;
-    }
-    if (Array.isArray(parsed)) {
-      return parsed as GeneratedQuiz[];
-    }
-    return Object.values(parsed).find(Array.isArray) as GeneratedQuiz[] || fallbackQuizzes("AI response structure unexpected");
-  } catch (error) {
-    console.error('Error generating MCQs:', error);
-    return fallbackQuizzes("OpenAI API reported an error or is out of credits");
-  }
-}
-export async function generateSummaryFromText(text: string): Promise<string> {
-  if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'your-key-here') {
-    return text.substring(0, 300) + "..."; // Simple fallback
-  }
-
+export async function generateMCQsFromText(text: string, category: string): Promise<GeneratedQuiz[]> {
   const prompt = `
-You are an expert news editor. Provide a comprehensive and ORIGINAL summary of the following news article in SIMPLE, HUMAN-READABLE English.
+    You are a subject-matter expert for Indian Defence exams (CDS, NDA, AFCAT).
+    Based on the news below (category: ${category}), generate exactly 3 MCQs.
+    
+    STRICT RULES:
+    1. Format: STANDALONE questions as seen in real papers.
+    2. Respond ONLY with a valid JSON object:
+    {
+      "quizzes": [
+        {
+          "question": "...",
+          "options": ["...", "...", "...", "..."],
+          "correctAnswer": "...",
+          "explanation": "...",
+          "hostileExplanation": "..."
+        }
+      ]
+    }
+    
+    News: "${text.substring(0, 3000)}"
+  `;
 
-STRICT GUIDELINES:
-1. DO NOT copy and paste sentences from the source. Re-write the entire update in your own words.
-2. Structure the summary in 5-7 detailed bullet points that explain the "Who, What, When, Where, and Why".
-3. Use simple, clear language that is easy for students to digest, while maintaining a professional tone.
-4. Explain any complex defence or technical jargon in simple terms within the summary.
-5. Ensure the user gets a complete understanding of the strategic importance for Indian Defence exam aspirants (CDS/NDA/AFCAT).
-
-Article text:
-"${text.substring(0, 3500)}"
-`;
-
-  try {
-    const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0.3,
-    });
-
-    return response.choices[0].message.content || text.substring(0, 300) + "...";
-  } catch (error) {
-    console.error('Error generating summary:', error);
-    return text.substring(0, 300) + "...";
+  // Try Gemini First
+  if (process.env.GEMINI_API_KEY) {
+    try {
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      let content = response.text();
+      
+      // Clean up markdown if Gemini returns it
+      content = content.replace(/```json/g, '').replace(/```/g, '').trim();
+      
+      const parsed = JSON.parse(content);
+      return parsed.quizzes || parsed;
+    } catch (err) {
+      console.error('Gemini MCQ Error:', err);
+    }
   }
+
+  // Fallback to OpenAI
+  if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'your-key-here') {
+    try {
+      const response = await openai.chat.completions.create({
+        model: 'gpt-3.5-turbo',
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 0.5,
+        response_format: { type: 'json_object' }
+      });
+      const content = response.choices[0].message.content;
+      if (content) {
+        const parsed = JSON.parse(content);
+        return parsed.quizzes || parsed;
+      }
+    } catch (err) {
+      console.error('OpenAI MCQ Error:', err);
+    }
+  }
+
+  return fallbackQuizzes(text, category);
+}
+
+export async function generateSummaryFromText(text: string): Promise<string> {
+  const prompt = `
+    You are an expert news editor. Provide a comprehensive summary of the following news article in 5-7 detailed bullet points.
+    Use simple, human-readable English.
+    
+    Article: "${text.substring(0, 3500)}"
+  `;
+
+  // Try Gemini First
+  if (process.env.GEMINI_API_KEY) {
+    try {
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      return response.text();
+    } catch (err) {
+      console.error('Gemini Summary Error:', err);
+    }
+  }
+
+  // Fallback to OpenAI
+  if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'your-key-here') {
+    try {
+      const response = await openai.chat.completions.create({
+        model: 'gpt-3.5-turbo',
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 0.3,
+      });
+      return response.choices[0].message.content || text.substring(0, 300) + "...";
+    } catch (err) {
+      console.error('OpenAI Summary Error:', err);
+    }
+  }
+
+  return text.substring(0, 300) + "...";
 }
