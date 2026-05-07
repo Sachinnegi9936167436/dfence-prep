@@ -1,9 +1,15 @@
 import { NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongoose';
 import { User } from '@/models/User';
+import { getSession } from '@/lib/auth';
 
 export async function POST(req: Request) {
   try {
+    const session = await getSession();
+    if (!session || session.subscriptionStatus !== 'active') {
+      return NextResponse.json({ error: 'Subscription required to submit tactical assessments.' }, { status: 403 });
+    }
+
     await connectToDatabase();
     
     const body = await req.json();

@@ -1,12 +1,18 @@
 import { NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongoose';
 import { Quiz } from '@/models/Quiz';
+import { getSession } from '@/lib/auth';
 
 const ALL_CATEGORIES = ['Defence', 'Sports', 'Awards', 'Books', 'Exercises', 'International Relations'];
 const PER_CATEGORY = 4; // Questions per category → 24 total
 
 export async function GET(req: Request) {
   try {
+    const session = await getSession();
+    if (!session || session.subscriptionStatus !== 'active') {
+      return NextResponse.json({ error: 'Subscription required to access tactical drills.' }, { status: 403 });
+    }
+
     await connectToDatabase();
 
     const { searchParams } = new URL(req.url);
