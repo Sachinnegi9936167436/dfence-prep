@@ -20,12 +20,19 @@ export async function GET(req: Request) {
     await connectToDatabase();
     const users = await User.find({});
     
-    // 2. Configure Web Push
-    webpush.setVapidDetails(
-      'mailto:admin@dfenceprep.com',
-      process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY as string,
-      process.env.VAPID_PRIVATE_KEY as string
-    );
+    const vapidPublic = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+    const vapidPrivate = process.env.VAPID_PRIVATE_KEY;
+
+    // 2. Configure Web Push (Only if keys are present)
+    if (vapidPublic && vapidPrivate) {
+      webpush.setVapidDetails(
+        'mailto:admin@dfenceprep.com',
+        vapidPublic,
+        vapidPrivate
+      );
+    } else {
+      console.warn('⚠️ [Cron] VAPID keys missing. Web Push notifications will be skipped.');
+    }
 
     const results = {
       pushSent: 0,
@@ -71,8 +78,8 @@ export async function GET(req: Request) {
         });
         results.emailsSent++;
 
-        // Send Push Notification if subscribed
-        if (user.pushSubscription) {
+        // Send Push Notification (Only if keys are present and user is subscribed)
+        if (vapidPublic && vapidPrivate && user.pushSubscription) {
           const sub = JSON.parse(JSON.stringify(user.pushSubscription)) as webpush.PushSubscription;
           await webpush.sendNotification(sub, JSON.stringify({ 
             title: "Daily Drill is Live! 🎯", 
