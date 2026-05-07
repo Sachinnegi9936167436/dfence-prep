@@ -17,7 +17,7 @@ export default async function DailyQuizPage() {
       <div className="absolute top-40 -right-20 w-96 h-96 bg-indigo-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float -z-10" style={{ animationDelay: '2s' }}></div>
       <div className="relative z-10">
         <SubscriptionShield 
-          session={session} 
+          subscriptionStatus={session?.subscriptionStatus || 'inactive'} 
           title="Tactical Drill Zone Restricted" 
           description="Daily assessment drills and AI-powered question analysis are reserved for active Elite subscribers."
         >

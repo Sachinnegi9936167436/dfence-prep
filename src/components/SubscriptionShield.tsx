@@ -7,19 +7,19 @@ import PremiumBadge from './PremiumBadge';
 
 interface SubscriptionShieldProps {
   children: ReactNode;
-  session: any;
+  subscriptionStatus: string;
   title?: string;
   description?: string;
 }
 
 export default function SubscriptionShield({ 
   children, 
-  session, 
+  subscriptionStatus, 
   title = "Elite Intelligence Locked", 
   description = "This strategic asset is reserved for active Premium Officers. Upgrade your status to gain immediate access." 
 }: SubscriptionShieldProps) {
   
-  if (session?.subscriptionStatus === 'active') {
+  if (subscriptionStatus === 'active') {
     return <>{children}</>;
   }
 
