@@ -1,14 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: #fcfdfe;
+  --foreground: #020617;
   --primary-navy: #0f172a;
   --tactical-blue: #2563eb;
   --tactical-dark: #1e40af;
-  --accent-gold: #fbbf24;
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.4);
+  --accent-gold: #f59e0b;
+  --premium-gold: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #f59e0b 100%);
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --elite-navy: #020617;
 }
 
 @theme inline {
@@ -31,6 +33,8 @@ body {
   --animate-fade-in-up: fade-in-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   --animate-pulse-slow: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   --animate-shimmer: shimmer 2s infinite linear;
+  --animate-glow: glow 4s ease-in-out infinite;
+  --animate-border-flow: border-flow 4s linear infinite;
 
   @keyframes login-enter {
     0% { opacity: 0; transform: translateY(30px) scale(0.95); }
@@ -52,6 +56,15 @@ body {
     from { background-position: -200% 0; }
     to { background-position: 200% 0; }
   }
+  @keyframes glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(37, 99, 235, 0.2); }
+    50% { box-shadow: 0 0 40px rgba(37, 99, 235, 0.4); }
+  }
+  @keyframes border-flow {
+    0% { border-color: rgba(37, 99, 235, 0.3); }
+    50% { border-color: rgba(37, 99, 235, 0.8); }
+    100% { border-color: rgba(37, 99, 235, 0.3); }
+  }
 }
 
 .glass-panel {
@@ -60,6 +73,29 @@ body {
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}
+
+.glass-panel-elite {
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.4);
+}
+
+.premium-glow {
+  position: relative;
+}
+
+.premium-glow::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: var(--premium-gold);
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0.5;
+  filter: blur(8px);
 }
 
 .tactical-gradient {
@@ -84,11 +120,19 @@ body {
 .stagger-4 { animation-delay: 400ms; }
 .stagger-5 { animation-delay: 500ms; }
 .stagger-6 { animation-delay: 600ms; }
+.stagger-7 { animation-delay: 700ms; }
+.stagger-8 { animation-delay: 800ms; }
 
 .subtle-grid {
   background-size: 40px 40px;
   background-image: 
     linear-gradient(to right, rgba(226, 232, 240, 0.5) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(226, 232, 240, 0.5) 1px, transparent 1px);
+}
+
+.text-premium {
+  background: var(--premium-gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 

@@ -14,8 +14,14 @@ import {
   Clock,
   Bell,
   Moon,
-  Star
+  Star,
+  BarChart3,
+  BrainCircuit,
+  FileText,
+  Gem
 } from 'lucide-react';
+import PremiumBadge from '@/components/PremiumBadge';
+import Link from 'next/link';
 
 function urlBase64ToUint8Array(base64String: string) {
   const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -44,6 +50,8 @@ interface UserStats {
   streak: number;
   badges: string[];
   fieldReport: string;
+  subscriptionStatus: string;
+  sectorStats?: { category: string; score: number }[];
 }
 
 export default function DashboardPage() {
@@ -119,7 +127,10 @@ export default function DashboardPage() {
         </div>
         <div className="flex items-center gap-4">
            <div className="text-right">
-              <span className="block text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Current Status</span>
+              <div className="flex items-center justify-end gap-2 mb-1">
+                 {stats.subscriptionStatus === 'active' && <PremiumBadge size="sm" />}
+                 <span className="block text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Current Status</span>
+              </div>
               <span className="text-lg font-black text-blue-600 uppercase tracking-tighter">{stats.rank}</span>
            </div>
            <div className="h-14 w-14 bg-gradient-to-tr from-blue-600 to-indigo-700 rounded-2xl flex items-center justify-center text-white shadow-xl">
@@ -214,6 +225,55 @@ export default function DashboardPage() {
                )}
              </div>
           </div>
+
+          {/* PREMIUM ONLY: Strategic Analytics */}
+          {stats.subscriptionStatus === 'active' ? (
+            <div className="glass-panel p-8 rounded-[2.5rem] border border-blue-100 shadow-xl opacity-0 animate-fade-in-up stagger-4">
+               <div className="flex items-center justify-between mb-8">
+                  <div className="flex items-center gap-3">
+                     <div className="h-10 w-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
+                        <BarChart3 size={20} />
+                     </div>
+                     <h3 className="text-xl font-black text-slate-900 font-heading">Strategic Sector Analysis</h3>
+                  </div>
+                  <PremiumBadge size="sm" />
+               </div>
+               
+               <div className="space-y-6">
+                  {[
+                    { cat: 'Defence Intelligence', val: 85, color: 'bg-blue-500' },
+                    { cat: 'Geopolitical Relations', val: 62, color: 'bg-indigo-500' },
+                    { cat: 'Tactical Drills', val: 94, color: 'bg-emerald-500' },
+                    { cat: 'Historical Ops', val: 45, color: 'bg-amber-500' },
+                  ].map((sector, i) => (
+                    <div key={i} className="space-y-2">
+                       <div className="flex justify-between text-xs font-bold uppercase tracking-wider">
+                          <span className="text-slate-500">{sector.cat}</span>
+                          <span className="text-slate-900">{sector.val}%</span>
+                       </div>
+                       <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                          <div 
+                            className={`h-full ${sector.color} rounded-full transition-all duration-[1.5s] ease-out`}
+                            style={{ width: `${sector.val}%`, transitionDelay: `${i * 150}ms` }}
+                          ></div>
+                       </div>
+                    </div>
+                  ))}
+               </div>
+            </div>
+          ) : (
+            <div className="relative group overflow-hidden p-8 rounded-[2.5rem] bg-slate-50 border-2 border-dashed border-slate-200 text-center opacity-0 animate-fade-in-up stagger-4">
+               <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+               <div className="relative z-10 space-y-4">
+                  <Gem className="h-10 w-10 text-slate-300 mx-auto group-hover:scale-110 transition-transform text-premium" />
+                  <h3 className="text-lg font-black text-slate-900">Unlock Strategic Intelligence</h3>
+                  <p className="text-slate-500 text-sm max-w-sm mx-auto">Get detailed performance breakdowns across all 6 sectors with Elite Strategic Analytics.</p>
+                  <Link href="/pricing" className="inline-block px-6 py-3 bg-white border-2 border-slate-200 text-slate-900 rounded-2xl text-xs font-black uppercase tracking-widest hover:border-blue-600 hover:text-blue-600 transition-all">
+                     View Premium Plans
+                  </Link>
+               </div>
+            </div>
+          )}
         </div>
 
         {/* Right Column: Stats Grid */}
@@ -278,6 +338,33 @@ export default function DashboardPage() {
                  <div className="text-2xl font-black text-slate-900 font-heading">{stats.streak} Days</div>
               </div>
            </div>
+
+           {/* PREMIUM ONLY: Elite Action Center */}
+           {stats.subscriptionStatus === 'active' && (
+             <div className="space-y-4 pt-4">
+                <div className="text-xs font-black text-slate-400 uppercase tracking-[0.3em] mb-4 pl-4 border-l-4 border-blue-600">Elite Resources</div>
+                
+                <button className="w-full glass-panel p-5 rounded-2xl flex items-center gap-4 hover:border-blue-300 transition-all group">
+                   <div className="h-10 w-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                      <FileText size={20} />
+                   </div>
+                   <div className="text-left">
+                      <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Download</div>
+                      <div className="text-sm font-bold text-slate-900">Current Affairs PDF</div>
+                   </div>
+                </button>
+
+                <button className="w-full glass-panel p-5 rounded-2xl flex items-center gap-4 hover:border-blue-300 transition-all group">
+                   <div className="h-10 w-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                      <BrainCircuit size={20} />
+                   </div>
+                   <div className="text-left">
+                      <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">AI Module</div>
+                      <div className="text-sm font-bold text-slate-900">Personalized Drills</div>
+                   </div>
+                </button>
+             </div>
+           )}
 
            {/* Quick Action */}
            <div className="pt-4">

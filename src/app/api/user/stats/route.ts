@@ -62,6 +62,7 @@ export async function GET() {
         progress,
         streak: user.streak || 0,
         badges: user.badges || [],
+        subscriptionStatus: user.subscriptionStatus || 'inactive',
         fieldReport
       }
     });

@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { CheckCircle2, XCircle, ArrowRight, Loader2, Trophy } from 'lucide-react';
+import { CheckCircle2, XCircle, ArrowRight, Loader2, Trophy, Lock, Sparkles, Gem } from 'lucide-react';
+import PremiumBadge from '@/components/PremiumBadge';
+import { getSession } from '@/lib/auth';
 
 export default function QuizClient() {
   const [quizzes, setQuizzes] = useState<any[]>([]);
@@ -13,6 +15,7 @@ export default function QuizClient() {
   const [score, setScore] = useState(0);
   const [showResults, setShowResults] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [session, setSession] = useState<any>(null);
   const router = useRouter();
 
   const fetchQuiz = () => {
@@ -45,8 +48,14 @@ export default function QuizClient() {
         setLoading(false);
       });
   };
-
-  useEffect(() => { fetchQuiz(); }, []);
+  
+  useEffect(() => {
+    fetch('/api/auth/session')
+      .then(res => res.json())
+      .then(data => setSession(data))
+      .catch(() => {});
+    fetchQuiz();
+  }, []);
 
   const handleOptionSelect = (option: string) => {
     if (isAnswered) return;
@@ -146,6 +155,15 @@ export default function QuizClient() {
         <p className="text-lg text-slate-500">You scored <strong>{score}</strong> out of <strong>{quizzes.length}</strong> ({percentage}%)</p>
         
         <div className="pt-6 border-t mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+          {session?.subscriptionStatus === 'active' ? (
+            <button onClick={fetchQuiz} className="px-8 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition">
+              🔀 Retake with Shuffled Questions
+            </button>
+          ) : (
+            <Link href="/pricing" className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full font-semibold hover:opacity-90 transition shadow-lg flex items-center justify-center gap-2">
+              <Gem size={18} /> Unlock Unlimited Retakes
+            </Link>
+          )}
           <button 
             onClick={() => {
               const text = `I just scored ${score}/${quizzes.length} on today's Tactical Drill at Dfence Prep! Can you beat my score? 🎯\n\nTake the challenge: https://dfenceprep.com`;
@@ -155,13 +173,21 @@ export default function QuizClient() {
           >
             Share on WhatsApp
           </button>
-          <button onClick={fetchQuiz} className="px-8 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition">
-            🔀 Retake with Shuffled Questions
-          </button>
           <button onClick={() => router.push('/')} className="px-8 py-3 bg-slate-900 text-white rounded-full font-semibold hover:bg-slate-800 transition">
             Back to Dashboard
           </button>
         </div>
+        
+        {session?.subscriptionStatus !== 'active' && (
+           <div className="mt-8 p-6 bg-slate-50 rounded-2xl border border-slate-200 text-left">
+              <div className="flex items-center gap-2 text-blue-600 font-black text-[10px] uppercase tracking-widest mb-2">
+                 <Sparkles size={14} /> Premium Advantage
+              </div>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                 Elite candidates get access to <strong>Detailed Sector Analytics</strong> and <strong>AI-generated Strategic Briefings</strong> for every question they miss. Don't leave your preparation to chance.
+              </p>
+           </div>
+        )}
       </div>
     );
   }
@@ -171,7 +197,10 @@ export default function QuizClient() {
   return (
     <div className="opacity-0 animate-fade-in-up duration-500">
       <div className="mb-8 flex items-center justify-between text-sm font-bold text-slate-500">
-        <span className="bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 px-4 py-1.5 rounded-full shadow-sm border border-blue-100/50">{currentQuiz.category}</span>
+        <div className="flex items-center gap-3">
+           <span className="bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 px-4 py-1.5 rounded-full shadow-sm border border-blue-100/50">{currentQuiz.category}</span>
+           {session?.subscriptionStatus === 'active' && <PremiumBadge size="sm" />}
+        </div>
         <span>Question {currentIndex + 1} of {quizzes.length}</span>
       </div>
 

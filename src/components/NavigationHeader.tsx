@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ShieldCheck, Menu, X } from 'lucide-react';
+import { ShieldCheck, Menu, X, Crown } from 'lucide-react';
 import LogoutButton from './LogoutButton';
+import PremiumBadge from './PremiumBadge';
 
 export default function NavigationHeader({ session }: { session: any }) {
   const pathname = usePathname();
@@ -57,10 +58,7 @@ export default function NavigationHeader({ session }: { session: any }) {
           {session ? (
             <div className="flex items-center space-x-5 border-l pl-5 border-slate-200">
               {session.subscriptionStatus === 'active' ? (
-                <div className="flex items-center gap-1.5 bg-green-50 text-green-700 text-[10px] font-black px-3 py-1.5 rounded-full border border-green-100 shadow-sm animate-pulse-slow">
-                  <div className="h-1.5 w-1.5 rounded-full bg-green-500 shrink-0"></div>
-                  PREMIUM
-                </div>
+                <PremiumBadge size="sm" />
               ) : (
                 <Link href="/pricing" className="relative group">
                    <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full blur opacity-30 group-hover:opacity-60 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
@@ -120,7 +118,7 @@ export default function NavigationHeader({ session }: { session: any }) {
                       <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="text-base font-black text-slate-900 hover:text-blue-600 transition-colors">{session.name || 'Officer Candidate'}</Link>
                    </div>
                    {session.subscriptionStatus === 'active' && (
-                     <span className="bg-green-100 text-green-700 text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest">PREMIUM</span>
+                     <PremiumBadge size="sm" />
                    )}
                 </div>
                 {!session.subscriptionStatus && (

@@ -2,10 +2,11 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import connectToDatabase from '@/lib/mongoose';
 import { Article as ArticleModel } from '@/models/Article';
-import { Clock, BookOpen, ExternalLink, Shield, Trophy, Medal, Globe, Dumbbell } from 'lucide-react';
+import { Clock, BookOpen, ExternalLink, Shield, Trophy, Medal, Globe, Dumbbell, Lock, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import NavigationHeader from '@/components/NavigationHeader';
 import { getSession } from '@/lib/auth';
+import PremiumBadge from '@/components/PremiumBadge';
 
 const CAT_ICONS: Record<string, any> = {
   Defence: Shield,
@@ -81,10 +82,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-90"></div>
             <div className="absolute bottom-8 left-8 right-8">
-               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest mb-4 shadow-lg border border-blue-500">
-                 <Icon className="h-3 w-3" />
-                 {article.category}
-               </span>
+               <div className="flex items-center gap-3 mb-4">
+                  <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest shadow-lg border border-blue-500">
+                    <Icon className="h-3 w-3" />
+                    {article.category}
+                  </span>
+                  {article.isPremium && <PremiumBadge />}
+               </div>
                <h1 className="text-3xl sm:text-5xl font-black text-white leading-tight drop-shadow-md font-heading">{article.title}</h1>
             </div>
           </div>
@@ -96,25 +100,62 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
                  {new Date(article.publishedAt).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
               </div>
 
-              <div className="bg-blue-50/50 border border-blue-100 rounded-3xl p-8 sm:p-10 shadow-inner">
+              <div className="bg-blue-50/50 border border-blue-100 rounded-3xl p-8 sm:p-10 shadow-inner relative overflow-hidden">
                 <h4 className="text-blue-800 font-black text-sm uppercase tracking-widest mb-6 flex items-center">
                   <BookOpen className="h-5 w-5 mr-3" />
                   Tactical Summary
                 </h4>
-                <div className="prose prose-slate max-w-none prose-p:text-slate-700 prose-p:leading-loose">
-                  {article.summary ? (
-                    <div className="whitespace-pre-line text-slate-700 font-medium leading-loose text-lg">
-                      {article.summary.split('\n').map((line: string, i: number) => (
-                        <div key={i} className="mb-3 flex items-start">
-                           <span className="text-blue-500 mr-3 shrink-0 text-xl">•</span>
-                           <span>{line.replace(/^[•\-\*]\s*/, '')}</span>
-                        </div>
-                      ))}
+                
+                {article.isPremium && session?.subscriptionStatus !== 'active' ? (
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white/90 z-10"></div>
+                    <div className="blur-[6px] select-none space-y-4">
+                       <p className="text-slate-700 font-medium leading-loose text-lg">
+                          This premium intelligence is restricted to Elite Personnel. 
+                          It contains high-level strategic analysis and specific actionable data 
+                          that provides a tactical advantage for competitive examinations.
+                       </p>
+                       <p className="text-slate-700 font-medium leading-loose text-lg">
+                          Upgrade to Premium to unlock the full summary, AI-generated explanations, 
+                          and specialized drills related to this sector.
+                       </p>
                     </div>
-                  ) : (
-                    <p className="italic text-slate-500 text-lg leading-loose">{article.content}</p>
-                  )}
-                </div>
+                    
+                    <div className="relative z-20 mt-10 p-8 rounded-[2rem] bg-slate-900 text-white shadow-2xl border border-blue-500/30 overflow-hidden group">
+                       <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:rotate-12 transition-transform">
+                          <Lock size={100} />
+                       </div>
+                       <div className="relative z-10 text-center space-y-6">
+                          <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-600/20 text-blue-400 rounded-full text-[10px] font-black uppercase tracking-widest">
+                             <Sparkles size={12} /> Elite Intelligence Locked
+                          </div>
+                          <h3 className="text-2xl font-black font-heading">Ready for the Full Briefing?</h3>
+                          <p className="text-slate-400 text-sm max-w-md mx-auto">Access the full tactical summary and unlimited AI drills for this and all other premium articles.</p>
+                          <Link 
+                            href="/pricing" 
+                            className="inline-block px-10 py-4 bg-blue-600 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-blue-700 transition-all shadow-[0_0_30px_rgba(37,99,235,0.4)] active:scale-95"
+                          >
+                             Upgrade to Premium
+                          </Link>
+                       </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="prose prose-slate max-w-none prose-p:text-slate-700 prose-p:leading-loose">
+                    {article.summary ? (
+                      <div className="whitespace-pre-line text-slate-700 font-medium leading-loose text-lg">
+                        {article.summary.split('\n').map((line: string, i: number) => (
+                          <div key={i} className="mb-3 flex items-start">
+                             <span className="text-blue-500 mr-3 shrink-0 text-xl">•</span>
+                             <span>{line.replace(/^[•\-\*]\s*/, '')}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="italic text-slate-500 text-lg leading-loose">{article.content}</p>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-6 border-t border-slate-100">
