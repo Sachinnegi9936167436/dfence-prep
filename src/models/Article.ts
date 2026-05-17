@@ -30,5 +30,7 @@ const ArticleSchema: Schema = new Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+ArticleSchema.index({ category: 1, publishedAt: -1 });
+
 // Avoid duplicate model compilation in Next.js development
 export const Article: Model<IArticle> = mongoose.models.Article || mongoose.model<IArticle>('Article', ArticleSchema);

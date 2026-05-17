@@ -12,6 +12,7 @@ if (!MONGODB_URI) {
  * during API Route usage.
  */
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   var mongoose: any;
 }
 

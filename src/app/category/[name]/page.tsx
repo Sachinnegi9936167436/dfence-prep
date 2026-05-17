@@ -35,6 +35,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     publishedAt: { $gte: sevenDaysAgo }
   })
     .sort({ publishedAt: -1 })
+    .limit(50)
     .lean();
 
   const serializedArticles = JSON.parse(JSON.stringify(articles));
