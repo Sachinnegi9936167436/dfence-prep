@@ -7,7 +7,18 @@ import { getSession } from '@/lib/auth';
 import NewsArticleClient from '@/components/NewsArticleClient';
 import PremiumBadge from '@/components/PremiumBadge';
 
-const CAT_ICONS: Record<string, ComponentType> = {
+interface ArticleData {
+  _id: string;
+  title: string;
+  content: string;
+  summary?: string;
+  category: string;
+  sourceUrl?: string;
+  imageUrl?: string;
+  publishedAt: string;
+}
+
+const CAT_ICONS: Record<string, ComponentType<{ size?: number }>> = {
   Defence: Shield,
   Sports: Trophy,
   Awards: Medal,
@@ -128,7 +139,7 @@ export default async function Home() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {latestArticles.map((article: Record<string, unknown>, index: number) => (
+            {latestArticles.map((article: ArticleData, index: number) => (
               <NewsArticleClient key={article._id} article={article} index={index} />
             ))}
           </div>
