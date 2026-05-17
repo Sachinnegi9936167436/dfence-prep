@@ -4,7 +4,7 @@ import { decrypt } from '@/lib/auth';
 
 const protectedRoutes = ['/', '/admin', '/daily-quiz'];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isProtectedRoute = protectedRoutes.some((route) => 

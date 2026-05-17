@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     }
 
     const newPayment = await Payment.create({
-      userId: session.userId,
+      userId: session.userId as any,
       plan,
       amount,
       utrNumber,
