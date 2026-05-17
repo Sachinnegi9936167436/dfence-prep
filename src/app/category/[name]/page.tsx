@@ -4,7 +4,18 @@ import { notFound } from 'next/navigation';
 import { Clock } from 'lucide-react';
 import NewsArticleClient from '@/components/NewsArticleClient';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  return [
+    { name: 'Defence' },
+    { name: 'Sports' },
+    { name: 'Awards' },
+    { name: 'Books' },
+    { name: 'Exercises' },
+    { name: 'International Relations' },
+  ];
+}
 
 interface CategoryPageProps {
   params: Promise<{ name: string }>;
