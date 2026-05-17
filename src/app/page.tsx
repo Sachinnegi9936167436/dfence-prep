@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { ComponentType } from 'react';
 import { BookOpen, Trophy, Shield, Medal, Globe, Dumbbell } from 'lucide-react';
+import Image from 'next/image';
 import { Article } from '@/models/Article';
 import connectToDatabase from '@/lib/mongoose';
 import { getSession } from '@/lib/auth';
@@ -47,10 +48,12 @@ export default async function Home() {
       {/* Revolutionary Hero Section */}
       <section className="relative -mt-10 pt-24 pb-32 overflow-hidden rounded-[4rem] shadow-2xl group">
         <div className="absolute inset-0 z-0">
-          <img 
+          <Image 
             src="/hero-army.png" 
             alt="Defence Prep Tactical Background" 
-            className="w-full h-full object-cover scale-105 group-hover:scale-110 transition-transform duration-[10s] ease-out"
+            fill
+            className="object-cover scale-105 group-hover:scale-110 transition-transform duration-[10s] ease-out"
+            priority
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent"></div>
           <div className="absolute inset-0 hero-overlay"></div>

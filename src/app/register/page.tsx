@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ShieldCheck, Loader2, AlertCircle } from 'lucide-react';
+import Image from 'next/image';
 
 export default function RegisterPage() {
   const [name, setName] = useState('');
@@ -59,10 +60,12 @@ export default function RegisterPage() {
       
       {/* Cinematic Background Image */}
       <div className="absolute inset-0 z-0">
-        <img 
+        <Image 
           src="/soldier-silhouette.png" 
           alt="Tactical Background" 
-          className="w-full h-full object-cover opacity-40 scale-105"
+          fill
+          className="object-cover opacity-40 scale-105"
+          priority
         />
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-transparent to-slate-900/80"></div>
       </div>

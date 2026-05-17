@@ -3,6 +3,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Clock, BookOpen, Shield, Trophy, Medal, Globe, Dumbbell } from 'lucide-react';
+import Image from 'next/image';
 
 const CAT_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   Defence: Shield,
@@ -36,7 +37,12 @@ export default function NewsArticleClient({ article, index }: { article: Article
       >
         {article.imageUrl && (
           <div className="relative h-56 w-full overflow-hidden">
-            <img src={article.imageUrl} alt={article.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
+            <Image 
+              src={article.imageUrl} 
+              alt={article.title} 
+              fill
+              className="object-cover group-hover:scale-110 transition-transform duration-1000" 
+            />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent opacity-60 group-hover:opacity-100 transition-opacity"></div>
             <div className="absolute top-4 left-4">
                <span className="bg-white/90 backdrop-blur-md text-slate-900 text-[10px] font-black px-3 py-1.5 rounded-full shadow-sm flex items-center gap-1.5">
