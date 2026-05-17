@@ -189,7 +189,7 @@ export default function DashboardPage() {
                      <span className="text-xs font-black uppercase tracking-[0.3em] leading-none">AI Intelligence Field Report</span>
                   </div>
                   <blockquote className="text-lg sm:text-2xl font-medium font-heading leading-snug italic text-slate-200">
-                     "{stats.fieldReport}"
+                     &quot;{stats.fieldReport}&quot;
                   </blockquote>
                    <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Source: Command AI 2.0</span>

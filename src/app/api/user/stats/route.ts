@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getSession } from '@/lib/auth';
 import connectToDatabase from '@/lib/mongoose';
 import { User } from '@/models/User';
+import OpenAI from 'openai';
 
 export const dynamic = 'force-dynamic';
 
@@ -47,6 +48,39 @@ export async function GET() {
       fieldReport = "Welcome, Officer Candidate. Your first objective is to complete 5 tactical drills to establish a baseline performance profile.";
     } else if (progress < 25) {
       fieldReport = "New rank within reach. Intensify training across all sectors to secure your promotion.";
+    }
+
+    // Dynamic AI Field Report
+    if (process.env.OPENAI_API_KEY) {
+      try {
+        const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+        const prompt = `You are the Command AI for a defense exam preparation platform. 
+Generate a short, motivating "Field Report" for a candidate (Officer Candidate).
+Candidate Stats:
+- Name: ${user.name}
+- Current Rank: ${currentRank.name}
+- Score: ${currentScore}
+- Quizzes Attempted: ${user.quizzesAttempted || 0}
+- Accuracy: ${user.quizzesAttempted > 0 ? Math.round((currentScore / (user.quizzesAttempted * 10)) * 100) : 0}%
+- Progress to next rank: ${progress}%
+
+The report should be 1-2 sentences long. Use a tactical, military tone (e.g., "operational readiness", "strategic objective"). Be encouraging.
+Output ONLY the report text, no quotes or extra text.`;
+
+        const response = await openai.chat.completions.create({
+          model: 'gpt-4o-mini',
+          messages: [{ role: 'user', content: prompt }],
+          max_tokens: 100,
+        });
+
+        const aiReport = response.choices[0]?.message?.content?.trim();
+        if (aiReport) {
+          fieldReport = aiReport;
+        }
+      } catch (error) {
+        console.error('Failed to generate AI field report:', error);
+        // Fallback to the static report defined above
+      }
     }
 
     return NextResponse.json({

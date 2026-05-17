@@ -7,7 +7,13 @@ import { ShieldCheck, Menu, X, Crown } from 'lucide-react';
 import LogoutButton from './LogoutButton';
 import PremiumBadge from './PremiumBadge';
 
-export default function NavigationHeader({ session }: { session: any }) {
+interface Session {
+  name?: string;
+  subscriptionStatus?: string;
+  [key: string]: unknown;
+}
+
+export default function NavigationHeader({ session }: { session: Session | null }) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 

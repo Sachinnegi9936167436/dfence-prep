@@ -45,9 +45,10 @@ export default function RegisterPage() {
       } else {
         setError(data.error || `Error ${res.status}: ${res.statusText}`);
       }
-    } catch (err: any) {
-      console.error('Registration Details:', err);
-      setError(err.message || 'An unexpected error occurred. Please try again.');
+    } catch (err: unknown) {
+      const error = err as Error;
+      console.error('Registration Details:', error);
+      setError(error.message || 'An unexpected error occurred. Please try again.');
     } finally {
       setLoading(false);
     }

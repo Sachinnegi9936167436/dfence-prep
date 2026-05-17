@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { ComponentType } from 'react';
 import { BookOpen, Trophy, Shield, Medal, Globe, Dumbbell } from 'lucide-react';
 import { Article } from '@/models/Article';
 import connectToDatabase from '@/lib/mongoose';
@@ -6,7 +7,7 @@ import { getSession } from '@/lib/auth';
 import NewsArticleClient from '@/components/NewsArticleClient';
 import PremiumBadge from '@/components/PremiumBadge';
 
-const CAT_ICONS: Record<string, any> = {
+const CAT_ICONS: Record<string, ComponentType> = {
   Defence: Shield,
   Sports: Trophy,
   Awards: Medal,
@@ -59,7 +60,7 @@ export default async function Home() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <Link href="/daily-quiz" className="w-full sm:w-auto px-10 py-5 bg-gradient-to-r from-blue-600 to-indigo-500 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:scale-105 transition-all shadow-[0_0_40px_rgba(37,99,235,0.4)] hover:shadow-[0_0_60px_rgba(37,99,235,0.6)] active:scale-95 border border-blue-400/30">
-              Launch Today's Drill
+              Launch Today&apos;s Drill
             </Link>
             {!session && (
               <Link href="/register" className="w-full sm:w-auto px-10 py-5 bg-white text-slate-900 border-2 border-slate-200 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-slate-50 transition-all active:scale-95">
@@ -127,7 +128,7 @@ export default async function Home() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {latestArticles.map((article: any, index: number) => (
+            {latestArticles.map((article: Record<string, unknown>, index: number) => (
               <NewsArticleClient key={article._id} article={article} index={index} />
             ))}
           </div>

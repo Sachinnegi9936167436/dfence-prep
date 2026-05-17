@@ -53,7 +53,7 @@ export default function ForgotPasswordPage() {
         </Link>
 
         <h1 className="text-2xl font-extrabold text-slate-900 mb-2">Forgot Password?</h1>
-        <p className="text-slate-500 text-center mb-6 text-sm">Enter your email and we'll send you a link to reset your password.</p>
+        <p className="text-slate-500 text-center mb-6 text-sm">Enter your email and we&apos;ll send you a link to reset your password.</p>
 
         {error && (
           <div className="w-full bg-red-50 text-red-600 p-4 rounded-xl flex items-center space-x-2 mb-6 text-sm font-medium">
@@ -66,7 +66,7 @@ export default function ForgotPasswordPage() {
           <div className="w-full bg-green-50 text-green-700 p-6 rounded-2xl flex flex-col items-center text-center space-y-4">
             <CheckCircle2 className="h-10 w-10 text-green-500" />
             <p className="font-semibold text-lg">Email Sent!</p>
-            <p className="text-sm">Check your inbox for a reset link. If you don't see it, check your spam folder.</p>
+            <p className="text-sm">Check your inbox for a reset link. If you don&apos;t see it, check your spam folder.</p>
             <Link href="/login" className="text-blue-600 font-bold hover:underline">Back to Login</Link>
           </div>
         ) : (

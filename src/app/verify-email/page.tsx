@@ -172,7 +172,7 @@ function VerifyEmailContent() {
             </form>
             
             <div className="mt-8 pt-6 border-t border-slate-100 flex flex-col items-center space-y-3">
-              <p className="text-sm text-slate-500">Didn't receive the code?</p>
+              <p className="text-sm text-slate-500">Didn&apos;t receive the code?</p>
               <button 
                 onClick={() => handleResend()}
                 disabled={resending}

@@ -9,7 +9,7 @@ export interface IUser extends Document {
   streak: number;
   lastQuizDate?: Date;
   badges?: string[];
-  pushSubscription?: any;
+  pushSubscription?: unknown;
   subscriptionStatus: 'active' | 'inactive' | 'pending';
   subscriptionExpiry: Date | null;
   role: 'admin' | 'user';
@@ -52,7 +52,7 @@ const UserSchema: Schema = new Schema({
 
 // Force re-registration in development to pick up schema changes
 if (process.env.NODE_ENV !== 'production' && mongoose.models.User) {
-  delete (mongoose.models as any).User;
+  delete (mongoose.models as Record<string, unknown>).User;
 }
 
 export const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);

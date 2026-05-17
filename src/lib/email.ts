@@ -56,8 +56,9 @@ export async function sendEmail({ to, subject, html, replyTo }: { to: string; su
     
     console.log(`✅ [Email] Sent successfully! MessageId: ${info.messageId}`);
     return info;
-  } catch (error: any) {
-    console.error('❌ [Email] Send Error:', error.message);
+  } catch (error: unknown) {
+    const err = error as Error;
+    console.error('❌ [Email] Send Error:', err.message);
     // Explicitly throw it so the API route can return a clearer error
     throw error;
   }

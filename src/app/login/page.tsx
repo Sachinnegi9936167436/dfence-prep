@@ -45,9 +45,10 @@ export default function LoginPage() {
       } else {
         setError(data.error || `Error ${res.status}: ${res.statusText}`);
       }
-    } catch (err: any) {
-      console.error('Login Details:', err);
-      setError(err.message || 'An unexpected error occurred. Please try again.');
+    } catch (err: unknown) {
+      const error = err as Error;
+      console.error('Login Details:', error);
+      setError(error.message || 'An unexpected error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -141,7 +142,7 @@ export default function LoginPage() {
 
         <div className="mt-8 flex flex-col items-center space-y-3">
           <p className="text-sm text-slate-500">
-            Don't have an account? <Link href="/register" className="text-blue-600 font-semibold hover:underline">Sign up for free</Link>
+            Don&apos;t have an account? <Link href="/register" className="text-blue-600 font-semibold hover:underline">Sign up for free</Link>
           </p>
           <p className="text-xs text-slate-400">
             Need to verify your account? <Link href="/verify-email" virtual-id="verify-email-link" className="text-blue-500 font-medium hover:underline">Verify Email</Link>

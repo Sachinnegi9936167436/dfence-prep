@@ -52,7 +52,7 @@ export default async function RootLayout({
           <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-center border-b border-slate-800 pb-10">
             <div>
                <h3 className="text-white font-black text-xl mb-2 font-heading">Dfence<span className="text-blue-500">Prep</span></h3>
-               <p className="max-w-xs text-sm leading-relaxed">The ultimate mission control for your defence career preparation. AI-powered excellence for tomorrow's officers.</p>
+               <p className="max-w-xs text-sm leading-relaxed">The ultimate mission control for your defence career preparation. AI-powered excellence for tomorrow&apos;s officers.</p>
             </div>
             <div className="flex space-x-8 md:justify-end text-sm font-bold uppercase tracking-widest overflow-x-auto no-scrollbar">
               <Link href="/admin" className="text-slate-500 hover:text-white transition-colors">Admin Portal</Link>

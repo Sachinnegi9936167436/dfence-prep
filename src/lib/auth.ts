@@ -1,10 +1,10 @@
-import { SignJWT, jwtVerify } from 'jose';
+import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
 import { cookies } from 'next/headers';
 
 const secretKey = process.env.JWT_SECRET || process.env.NEXTAUTH_SECRET || 'fallback-secret-for-development-dfence';
 const key = new TextEncoder().encode(secretKey);
 
-export async function encrypt(payload: any) {
+export async function encrypt(payload: JWTPayload) {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
@@ -12,7 +12,7 @@ export async function encrypt(payload: any) {
     .sign(key);
 }
 
-export async function decrypt(token: string): Promise<any> {
+export async function decrypt(token: string): Promise<JWTPayload | null> {
   try {
     const { payload } = await jwtVerify(token, key, {
       algorithms: ['HS256'],
@@ -30,7 +30,7 @@ export async function getSession() {
   return await decrypt(session);
 }
 
-export async function setSessionCookie(payload: any) {
+export async function setSessionCookie(payload: JWTPayload) {
   const sessionString = await encrypt(payload);
   const cookieStore = await cookies();
   cookieStore.set('session', sessionString, {

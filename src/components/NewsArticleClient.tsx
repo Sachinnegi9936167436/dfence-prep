@@ -4,7 +4,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Clock, BookOpen, Shield, Trophy, Medal, Globe, Dumbbell } from 'lucide-react';
 
-const CAT_ICONS: Record<string, any> = {
+const CAT_ICONS: Record<string, React.ComponentType> = {
   Defence: Shield,
   Sports: Trophy,
   Awards: Medal,
