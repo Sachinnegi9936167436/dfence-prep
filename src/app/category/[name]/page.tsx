@@ -46,7 +46,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     publishedAt: { $gte: sevenDaysAgo }
   })
     .sort({ publishedAt: -1 })
-    .limit(50)
+    .limit(20)
     .lean();
 
   const serializedArticles = articles.map((article: any) => {
