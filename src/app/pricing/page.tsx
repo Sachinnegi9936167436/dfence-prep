@@ -6,8 +6,8 @@ import { Check, ShieldCheck, QrCode, Loader2, Star, Zap, Target, BarChart3, Brai
 import PremiumBadge from '@/components/PremiumBadge';
 
 const PLANS = [
-  { id: '1_week', name: 'Elite Weekly', price: 30, duration: '7 days', features: ['Daily News Updates', 'Standard Quizzes', 'Progress Tracking'], popular: false },
-  { id: '1_month', name: 'Command Monthly', price: 50, duration: '30 days', features: ['Daily News Updates', 'Premium Intelligence', 'Strategic Analytics', 'Priority Support'], popular: true },
+  { id: '1_week', name: 'Elite Weekly', price: 30, duration: '7 days', features: ['Curated Defence Intelligence Feed', 'AI-Powered Exam-Specific Mock Drills', 'Progress Tracking'], popular: false },
+  { id: '1_month', name: 'Command Monthly', price: 50, duration: '30 days', features: ['Curated Defence Intelligence Feed', 'Premium Intelligence', 'Strategic Analytics', 'Priority Support'], popular: true },
   { id: '3_months', name: 'Officer Quarterly', price: 80, duration: '90 days', features: ['Everything in Monthly', 'PDF Command Reports', 'AI Exam Strategy', 'Offline Training Modules'], popular: false },
 ];
 
