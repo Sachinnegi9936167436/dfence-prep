@@ -49,7 +49,13 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     .limit(50)
     .lean();
 
-  const serializedArticles = JSON.parse(JSON.stringify(articles));
+  const serializedArticles = articles.map((article: any) => {
+    const serialized = JSON.parse(JSON.stringify(article));
+    return {
+      ...serialized,
+      content: serialized.summary || (serialized.content.length > 200 ? serialized.content.substring(0, 200) + '...' : serialized.content),
+    };
+  });
 
   const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
   
