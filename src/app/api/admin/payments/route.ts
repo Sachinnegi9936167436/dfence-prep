@@ -15,7 +15,7 @@ export async function GET() {
     const payments = await Payment.find().populate('userId', 'email name').sort({ createdAt: -1 });
     
     return NextResponse.json({ success: true, payments });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to fetch payments' }, { status: 500 });
   }
 }
@@ -60,7 +60,7 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ success: true, message: 'Payment status updated' });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to update payment' }, { status: 500 });
   }
 }

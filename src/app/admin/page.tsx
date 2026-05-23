@@ -3,16 +3,41 @@
 import React, { useState, useEffect } from 'react';
 import { Loader2, Plus, RefreshCw, CheckCircle, XCircle, Trash2, Users, Pencil, X } from 'lucide-react';
 
+interface Payment {
+  _id: string;
+  userId?: { email: string };
+  plan: string;
+  amount: number;
+  utrNumber: string;
+  status: string;
+  createdAt: string;
+}
+
+interface User {
+  _id: string;
+  email: string;
+  name?: string;
+  role: string;
+  subscriptionStatus: string;
+  lastLogin?: string;
+}
+
+interface ApiResponse {
+  success?: boolean;
+  message?: string;
+  error?: string;
+}
+
 export default function AdminDashboard() {
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<ApiResponse | null>(null);
   const [resetting, setResetting] = useState(false);
   
-  const [payments, setPayments] = useState<any[]>([]);
+  const [payments, setPayments] = useState<Payment[]>([]);
   const [loadingPayments, setLoadingPayments] = useState(true);
 
   // User Management State Map
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(true);
   const [newEmail, setNewEmail] = useState('');
   const [newName, setNewName] = useState('');
@@ -23,7 +48,7 @@ export default function AdminDashboard() {
   const [userError, setUserError] = useState('');
 
   // Edit User State
-  const [editingUser, setEditingUser] = useState<any | null>(null);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
   const [editName, setEditName] = useState('');
   const [editEmail, setEditEmail] = useState('');
   const [editRole, setEditRole] = useState('user');
@@ -69,7 +94,7 @@ export default function AdminDashboard() {
       } else {
         setUserError(data.error || 'Registration failed');
       }
-    } catch (err) {
+    } catch {
       setUserError('A network error occurred');
     } finally {
       setAddingUser(false);
@@ -91,7 +116,7 @@ export default function AdminDashboard() {
     }
   };
 
-  const openEdit = (user: any) => {
+  const openEdit = (user: User) => {
     setEditingUser(user);
     setEditName(user.name || '');
     setEditEmail(user.email || '');
@@ -119,7 +144,7 @@ export default function AdminDashboard() {
       } else {
         setEditError(data.error || 'Update failed');
       }
-    } catch (err) {
+    } catch {
       setEditError('A network error occurred');
     } finally {
       setSavingEdit(false);
@@ -180,7 +205,7 @@ export default function AdminDashboard() {
       });
       const data = await res.json();
       setResult(data);
-    } catch (error) {
+    } catch {
       setResult({ error: 'Failed to fetch news' });
     } finally {
       setLoading(false);

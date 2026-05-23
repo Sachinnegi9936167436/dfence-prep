@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { Trophy, Medal, Award, Loader2, Shield } from 'lucide-react';
-import NavigationHeader from '@/components/NavigationHeader';
 
 interface LeaderboardUser {
   _id: string;

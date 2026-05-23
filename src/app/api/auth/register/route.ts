@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongoose';
 import { User } from '@/models/User';
 import bcrypt from 'bcryptjs';
-import crypto from 'crypto';
 import { sendEmail } from '@/lib/email';
 
 const generateOtpEmailHtml = (otp: string) => `
@@ -79,7 +78,7 @@ export async function POST(req: Request) {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const otpExpires = new Date(Date.now() + 10 * 60000); // 10 minutes
 
-    const newUser = await User.create({
+    await User.create({
       email,
       password: hashedPassword,
       name: name || 'Student',
@@ -100,11 +99,11 @@ export async function POST(req: Request) {
       redirectToVerify: true,
       email 
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Registration Error:', error);
     return NextResponse.json({ 
-      error: error.message || 'Registration failed. Please try again.',
-      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      error: (error as Error).message || 'Registration failed. Please try again.',
+      details: process.env.NODE_ENV === 'development' ? (error as Error).stack : undefined
     }, { status: 500 });
   }
 }

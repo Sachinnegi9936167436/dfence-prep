@@ -8,11 +8,10 @@ import * as cheerio from 'cheerio';
 // Define categories we want to fetch
 const CATEGORIES = ['Defence', 'Sports', 'Awards', 'Books', 'Exercises', 'International Relations'];
 
-export async function POST(req: Request) {
+export async function POST() {
   try {
-    const authHeader = req.headers.get('authorization');
     // Implement a simple token check for admin route if desired, ignoring for now for simplicity, or just check a basic secret
-    // if (authHeader !== `Bearer ${process.env.ADMIN_SECRET}`) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // if (req.headers.get('authorization') !== `Bearer ${process.env.ADMIN_SECRET}`) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     await connectToDatabase();
 
@@ -20,9 +19,9 @@ export async function POST(req: Request) {
     const apiKey = process.env.NEWS_API_KEY || 'dummy';
 
     const newArticlesCount: Record<string, number> = { Defence: 0, Sports: 0, Awards: 0, Books: 0, Exercises: 0, 'International Relations': 0 };
-    const newQuizzesCount = 0;
 
     for (const category of CATEGORIES) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let articles: any[] = [];
 
       if (category === 'Defence') {
@@ -33,6 +32,7 @@ export async function POST(req: Request) {
           const $ = cheerio.load(html);
 
           const threadLinks = new Set<string>();
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           $('a[href^="/threads/"]').each((i: number, el: any) => {
             const href = $(el).attr('href');
             if (href && !href.includes('/unread') && !href.includes('/latest') && !href.includes('/post-')) {
@@ -77,6 +77,7 @@ export async function POST(req: Request) {
           const $ = cheerio.load(html);
 
           const articleLinks = new Set<string>();
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           $('.top-news a, .nation a, .articles a, h2 a, h3 a').each((i: number, el: any) => {
             const href = $(el).attr('href');
             if (href && href.includes('indianexpress.com/article/sports/')) {
@@ -96,6 +97,7 @@ export async function POST(req: Request) {
             
             const contentNodes = article$('#storycenterbyline p, .story_details p, .full-details p');
             let content = '';
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             contentNodes.each((i: number, el: any) => {
               content += article$(el).text().trim() + ' ';
             });
@@ -123,6 +125,7 @@ export async function POST(req: Request) {
           const $ = cheerio.load(html);
 
           const articleLinks = new Set<string>();
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           $('a').each((i: number, el: any) => {
             const href = $(el).attr('href');
             if (href && href.includes('/articles/')) {
@@ -141,6 +144,7 @@ export async function POST(req: Request) {
             const title = article$('h1').first().text().trim();
             
             let content = '';
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             article$('div[data-component="text-block"]').slice(0, 10).each((i: number, el: any) => {
               const text = article$(el).text().trim();
               if (text) content += text + ' ';
@@ -191,7 +195,6 @@ export async function POST(req: Request) {
             summary: summary,
             aiProcessed: false,
           });
-          // @ts-ignore
           newArticlesCount[category]++;
         } else if (existing.aiProcessed) {
           continue; // Already processed
@@ -203,6 +206,7 @@ export async function POST(req: Request) {
             const generatedQuizzes = await generateMCQsFromText(targetArticle.content, category);
             
             if (generatedQuizzes && generatedQuizzes.length > 0) {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const quizDocs = generatedQuizzes.map((q: any) => ({
                 articleId: targetArticle._id,
                 question: q.question,
@@ -236,12 +240,12 @@ export async function POST(req: Request) {
       purgedCount: deleteResult.deletedCount
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Fetch News Error:', error);
-    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json({ error: (error as Error).message || 'Internal Server Error' }, { status: 500 });
   }
 }
 
-export async function GET(req: Request) {
-  return POST(req);
+export async function GET() {
+  return POST();
 }

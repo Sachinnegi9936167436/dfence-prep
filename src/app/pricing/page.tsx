@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Check, ShieldCheck, QrCode, Loader2, Star, Zap, Target, BarChart3, BrainCircuit, FileText, X } from 'lucide-react';
+import { Check, ShieldCheck, Loader2, Star, Zap, Target, BarChart3, BrainCircuit, FileText, X } from 'lucide-react';
 import PremiumBadge from '@/components/PremiumBadge';
+import Image from 'next/image';
 
 const PLANS = [
   { id: '1_week', name: 'Elite Weekly', price: 30, duration: '7 days', features: ['Curated Defence Intelligence Feed', 'AI-Powered Exam-Specific Mock Drills', 'Progress Tracking'], popular: false },
@@ -49,7 +50,7 @@ export default function PricingPage() {
         const data = await res.json();
         alert(data.error || 'Failed to submit payment details');
       }
-    } catch (err) {
+    } catch {
       alert('An error occurred. Please try again.');
     } finally {
       setLoading(false);
@@ -98,7 +99,7 @@ export default function PricingPage() {
             {PLANS.map((plan, index) => (
               <div 
                 key={plan.id} 
-                className={`group relative glass-panel p-10 rounded-[2.5rem] transition-all duration-500 hover:-translate-y-3 opacity-0 animate-fade-in-up stagger-${index + 1} ${plan.popular ? 'border-blue-500 ring-8 ring-blue-500/5' : ''}`}
+                className={`group relative glass-panel p-10 rounded-[2.5rem] transition-all duration-500 hover:-translate-y-3 opacity-0 animate-fade-in-up stagger-${index + 1} ${plan.popular ? 'border-blue-500 ring-8 ring-blue-500/5 shadow-[0_0_40px_rgba(37,99,235,0.25)]' : ''}`}
               >
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2">
@@ -193,9 +194,11 @@ export default function PricingPage() {
                      <div className="flex flex-col items-center lg:items-start gap-8">
                         <div className="p-4 bg-slate-50 rounded-[2rem] border border-slate-100 shadow-inner relative group">
                            <div className="bg-white p-3 rounded-2xl shadow-sm">
-                             <img 
+                             <Image 
                                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=${upiId}&pn=DfencePrep&am=${selectedPlan.price}&cu=INR`)}`} 
                                alt="UPI QR Code" 
+                               width={160}
+                               height={160}
                                className="w-40 h-40"
                              />
                            </div>

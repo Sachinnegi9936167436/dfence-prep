@@ -23,7 +23,7 @@ export async function POST() {
       success: true,
       message: `Cleared ${deletedQuizzes.deletedCount} quizzes. Reset ${resetArticles.modifiedCount} articles. Now click "Fetch Latest News & Generate Quizzes" to regenerate.`,
     });
-  } catch (error: any) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    return NextResponse.json({ success: false, error: (error as Error).message }, { status: 500 });
   }
 }

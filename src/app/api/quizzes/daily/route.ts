@@ -44,7 +44,7 @@ export async function GET(req: Request) {
     const shuffled = combined.sort(() => Math.random() - 0.5);
 
     return NextResponse.json({ success: true, quizzes: shuffled });
-  } catch (error: any) {
+  } catch {
     return NextResponse.json({ error: 'Failed to fetch quizzes' }, { status: 500 });
   }
 }

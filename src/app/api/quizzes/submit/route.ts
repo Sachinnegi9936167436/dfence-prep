@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     console.log(`Processing submisson for ${email}: Score ${score}/${totalQuestions}`);
 
     // Case-insensitive search for the user
-    let user = await User.findOne({ 
+    const user = await User.findOne({ 
       email: { $regex: new RegExp(`^${email}$`, 'i') } 
     });
     
@@ -82,7 +82,7 @@ export async function POST(req: Request) {
     console.log(`Successfully updated profile for ${email}. New Score: ${user.score}`);
 
     return NextResponse.json({ success: true, user });
-  } catch (error: any) {
+  } catch {
     return NextResponse.json({ error: 'Failed to submit score' }, { status: 500 });
   }
 }

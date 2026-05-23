@@ -8,11 +8,11 @@ export async function GET() {
       success: true, 
       message: `Successfully generated ${count} fresh quizzes from news articles.` 
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Generation Tool Error:', error);
     return NextResponse.json({ 
       success: false, 
-      error: error.message 
+      error: (error as Error).message 
     }, { status: 500 });
   }
 }

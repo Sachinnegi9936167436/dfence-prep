@@ -11,6 +11,7 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit' })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://dfenceprep.com'),
   title: 'Dfence Prep | AI-Powered Defence Exam Mastery',
   description: 'Daily curated news, strategic AI quizzes, and tactical MCQ practice for CDS, NDA, AFCAT, and more.',
   openGraph: {

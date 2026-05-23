@@ -4,11 +4,12 @@ import connectToDatabase from '@/lib/mongoose';
 import { Article as ArticleModel } from '@/models/Article';
 import { Clock, BookOpen, ExternalLink, Shield, Trophy, Medal, Globe, Dumbbell, Lock, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import NavigationHeader from '@/components/NavigationHeader';
 import { getSession } from '@/lib/auth';
 import PremiumBadge from '@/components/PremiumBadge';
 
-const CAT_ICONS: Record<string, any> = {
+const CAT_ICONS: Record<string, typeof Shield> = {
   Defence: Shield,
   Sports: Trophy,
   Awards: Medal,
@@ -22,7 +23,7 @@ async function getArticle(id: string) {
     await connectToDatabase();
     const article = await ArticleModel.findById(id).lean();
     return article ? JSON.parse(JSON.stringify(article)) : null;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
@@ -74,7 +75,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
         <div className="bg-white rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-500">
           <div className="relative h-64 sm:h-96 shrink-0">
             {article.imageUrl ? (
-              <img src={article.imageUrl} alt={article.title} className="w-full h-full object-cover" />
+              <Image src={article.imageUrl} alt={article.title} fill className="object-cover" />
             ) : (
               <div className="w-full h-full bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center">
                  <Icon className="h-32 w-32 text-white/20" />

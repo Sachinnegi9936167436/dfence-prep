@@ -101,7 +101,7 @@ Output ONLY the report text, no quotes or extra text.`;
       }
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Stats API Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }

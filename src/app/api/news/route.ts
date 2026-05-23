@@ -18,7 +18,7 @@ export async function GET(req: Request) {
       .lean();
 
     return NextResponse.json({ success: true, articles });
-  } catch (error: any) {
+  } catch {
     return NextResponse.json({ error: 'Failed to fetch news' }, { status: 500 });
   }
 }

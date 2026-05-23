@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ShieldCheck, Menu, X, Crown } from 'lucide-react';
+import { ShieldCheck, Menu, X, Sun, Moon } from 'lucide-react';
 import LogoutButton from './LogoutButton';
 import PremiumBadge from './PremiumBadge';
 
@@ -16,6 +16,26 @@ interface Session {
 export default function NavigationHeader({ session }: { session: Session | null }) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('theme') === 'dark';
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
+
+  const toggleDarkMode = () => {
+    const newDark = !darkMode;
+    setDarkMode(newDark);
+    localStorage.setItem('theme', newDark ? 'dark' : 'light');
+  };
 
   // Hide the global navigation bar entirely on authentication pages
   if (pathname === '/login' || pathname === '/register') {
@@ -61,6 +81,14 @@ export default function NavigationHeader({ session }: { session: Session | null 
         </nav>
         
         <div className="hidden lg:flex items-center space-x-5 ml-auto">
+          <button 
+            onClick={toggleDarkMode} 
+            className="p-2.5 text-slate-600 hover:text-blue-600 transition rounded-xl bg-slate-50 dark:bg-slate-800 dark:text-slate-300 dark:hover:text-blue-400"
+            aria-label="Toggle Dark Mode"
+          >
+            {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </button>
+          
           {session ? (
             <div className="flex items-center space-x-5 border-l pl-5 border-slate-200">
               {session.subscriptionStatus === 'active' ? (

@@ -4,6 +4,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Clock, BookOpen, Shield, Trophy, Medal, Globe, Dumbbell } from 'lucide-react';
 import Image from 'next/image';
+import { format } from 'date-fns';
 
 const CAT_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   Defence: Shield,
@@ -57,7 +58,7 @@ export default function NewsArticleClient({ article, index }: { article: Article
           <div className="flex items-center space-x-3 text-[10px] text-slate-400 font-black uppercase tracking-widest mb-4">
             <span className="flex items-center">
               <Clock className="h-3 w-3 mr-1.5" />
-              {new Date(article.publishedAt).toLocaleDateString()}
+              {format(new Date(article.publishedAt), 'dd/MM/yyyy')}
             </span>
           </div>
           <h3 className="font-black text-xl mb-3 line-clamp-2 text-slate-900 group-hover:text-blue-700 transition-colors leading-tight font-heading">{article.title}</h3>

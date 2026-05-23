@@ -101,9 +101,9 @@ export async function GET(req: Request) {
       summary: results 
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Daily Reminder Cron Error:', error);
-    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json({ error: (error as Error).message || 'Internal Server Error' }, { status: 500 });
   }
 }
 

@@ -2,13 +2,25 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { CheckCircle2, XCircle, ArrowRight, Loader2, Trophy, Lock, Sparkles, Gem } from 'lucide-react';
+import { CheckCircle2, XCircle, ArrowRight, Loader2, Trophy, Sparkles, Gem } from 'lucide-react';
 import PremiumBadge from '@/components/PremiumBadge';
-import { getSession } from '@/lib/auth';
 import Link from 'next/link';
 
+interface Quiz {
+  category: string;
+  question: string;
+  options: string[];
+  correctAnswer: string;
+  explanation: string;
+  hostileExplanation?: string;
+}
+
+interface Session {
+  subscriptionStatus: string;
+}
+
 export default function QuizClient() {
-  const [quizzes, setQuizzes] = useState<any[]>([]);
+  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -16,7 +28,7 @@ export default function QuizClient() {
   const [score, setScore] = useState(0);
   const [showResults, setShowResults] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [session, setSession] = useState<any>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const router = useRouter();
 
   const fetchQuiz = () => {
@@ -33,7 +45,7 @@ export default function QuizClient() {
         if (data.success && data.quizzes) {
           const shuffled = data.quizzes
             .sort(() => Math.random() - 0.5)
-            .map((quiz: any) => ({
+            .map((quiz: Quiz) => ({
               ...quiz,
               options: [...quiz.options].sort(() => Math.random() - 0.5),
             }));
@@ -110,7 +122,7 @@ export default function QuizClient() {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4">
         <Loader2 className="h-10 w-10 text-blue-600 animate-spin" />
-        <p className="text-slate-500 font-medium">Loading today's challenge...</p>
+        <p className="text-slate-500 font-medium">Loading today&apos;s challenge...</p>
       </div>
     );
   }
@@ -137,7 +149,7 @@ export default function QuizClient() {
           <Trophy className="h-10 w-10 text-slate-400" />
         </div>
         <h2 className="text-2xl font-bold">No quizzes available yet</h2>
-        <p className="text-slate-500 max-w-md">The admin hasn't generated today's quizzes from the latest news. Please check back later.</p>
+        <p className="text-slate-500 max-w-md">The admin hasn&apos;t generated today&apos;s quizzes from the latest news. Please check back later.</p>
         <button onClick={() => router.push('/')} className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition">
           Return Home
         </button>
@@ -185,7 +197,7 @@ export default function QuizClient() {
                  <Sparkles size={14} /> Premium Advantage
               </div>
               <p className="text-xs text-slate-500 leading-relaxed">
-                 Elite candidates get access to <strong>Detailed Sector Analytics</strong> and <strong>AI-generated Strategic Briefings</strong> for every question they miss. Don't leave your preparation to chance.
+                 Elite candidates get access to <strong>Detailed Sector Analytics</strong> and <strong>AI-generated Strategic Briefings</strong> for every question they miss. Don&apos;t leave your preparation to chance.
               </p>
            </div>
         )}

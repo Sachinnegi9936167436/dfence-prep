@@ -17,8 +17,8 @@ export async function GET() {
     const users = await User.find({ isVerified: true }, '-password').sort({ createdAt: -1 });
 
     return NextResponse.json({ success: true, users });
-  } catch (error: any) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    return NextResponse.json({ success: false, error: (error as Error).message }, { status: 500 });
   }
 }
 
@@ -60,8 +60,8 @@ export async function POST(request: Request) {
     delete userObj.password;
 
     return NextResponse.json({ success: true, user: userObj });
-  } catch (error: any) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    return NextResponse.json({ success: false, error: (error as Error).message }, { status: 500 });
   }
 }
 
@@ -94,8 +94,8 @@ export async function DELETE(request: Request) {
     await User.findByIdAndDelete(userId);
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    return NextResponse.json({ success: false, error: (error as Error).message }, { status: 500 });
   }
 }
 
@@ -119,7 +119,13 @@ export async function PUT(request: Request) {
       return NextResponse.json({ success: false, error: 'Another user is already actively using this designated email.' }, { status: 400 });
     }
 
-    const updatePayload: any = { name, email, role, subscriptionStatus };
+    const updatePayload: {
+      name?: string;
+      email?: string;
+      role?: string;
+      subscriptionStatus?: string;
+      password?: string;
+    } = { name, email, role, subscriptionStatus };
     if (newPassword && newPassword.length >= 6) {
       updatePayload.password = await bcrypt.hash(newPassword, 10);
     }
@@ -135,7 +141,7 @@ export async function PUT(request: Request) {
     }
 
     return NextResponse.json({ success: true, user: updatedUser });
-  } catch (error: any) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    return NextResponse.json({ success: false, error: (error as Error).message }, { status: 500 });
   }
 }

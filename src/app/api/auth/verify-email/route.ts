@@ -27,7 +27,7 @@ export async function GET(req: Request) {
     await user.save();
 
     return NextResponse.json({ success: true, message: 'Email verified successfully' });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Verify Email Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
@@ -85,7 +85,7 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ success: true, message: 'Verification email sent' });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Resend Verification Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
@@ -117,7 +117,7 @@ export async function PUT(req: Request) {
     await user.save();
 
     return NextResponse.json({ success: true, message: 'Email verified successfully' });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('OTP Verification Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }

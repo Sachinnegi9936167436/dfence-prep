@@ -38,7 +38,7 @@ function VerifyEmailContent() {
       } else {
         setError(data.error || 'Verification failed. The link may be expired.');
       }
-    } catch (err) {
+    } catch {
       setError('An unexpected error occurred during verification.');
     } finally {
       setLoading(false);
@@ -69,7 +69,7 @@ function VerifyEmailContent() {
       } else {
         setError(data.error || 'Invalid or expired OTP.');
       }
-    } catch (err) {
+    } catch {
       setError('An unexpected error occurred during verification.');
     } finally {
       setLoading(false);
@@ -99,7 +99,7 @@ function VerifyEmailContent() {
       } else {
         setError(data.error || 'Failed to resend verification email.');
       }
-    } catch (err) {
+    } catch {
       setError('An unexpected error occurred.');
     } finally {
       setResending(false);

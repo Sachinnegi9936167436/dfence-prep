@@ -24,6 +24,7 @@ export async function POST(req: Request) {
     }
 
     const newPayment = await Payment.create({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       userId: session.userId as any,
       plan,
       amount,
@@ -32,7 +33,7 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ success: true, paymentId: newPayment._id });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Payment Submission Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }

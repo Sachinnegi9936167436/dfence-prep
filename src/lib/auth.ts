@@ -18,7 +18,7 @@ export async function decrypt(token: string): Promise<JWTPayload | null> {
       algorithms: ['HS256'],
     });
     return payload;
-  } catch (error) {
+  } catch {
     return null;
   }
 }

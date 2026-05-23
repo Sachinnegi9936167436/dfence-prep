@@ -30,7 +30,7 @@ export default function RegisterPage() {
       let data;
       try {
         data = JSON.parse(text);
-      } catch (e) {
+      } catch {
         throw new Error(`Server returned ${res.status}: ${text.substring(0, 100)}`);
       }
 

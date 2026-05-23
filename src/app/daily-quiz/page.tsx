@@ -1,5 +1,4 @@
 import connectToDatabase from '@/lib/mongoose';
-import { Quiz } from '@/models/Quiz';
 import QuizClient from './QuizClient';
 import { getSession } from '@/lib/auth';
 import SubscriptionShield from '@/components/SubscriptionShield';

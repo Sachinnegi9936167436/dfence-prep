@@ -23,6 +23,16 @@ import {
 import PremiumBadge from '@/components/PremiumBadge';
 import SubscriptionShield from '@/components/SubscriptionShield';
 import Link from 'next/link';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+
+const MOCK_CHART_DATA = [
+  { name: 'Drill 1', score: 45 },
+  { name: 'Drill 2', score: 62 },
+  { name: 'Drill 3', score: 55 },
+  { name: 'Drill 4', score: 84 },
+  { name: 'Drill 5', score: 78 },
+  { name: 'Drill 6', score: 95 },
+];
 
 function urlBase64ToUint8Array(base64String: string) {
   const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -245,6 +255,27 @@ export default function DashboardPage() {
                     <PremiumBadge size="sm" />
                  </div>
                  
+                 {/* Score Progression Chart */}
+                 <div className="h-64 w-full mb-8">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={MOCK_CHART_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(203, 213, 225, 0.3)" />
+                        <XAxis dataKey="name" stroke="#64748b" fontSize={11} fontWeight="bold" />
+                        <YAxis stroke="#64748b" fontSize={11} fontWeight="bold" />
+                        <Tooltip 
+                          contentStyle={{ 
+                            background: 'var(--glass-bg)', 
+                            border: '1px solid var(--glass-border)',
+                            borderRadius: '12px',
+                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                            fontSize: '12px'
+                          }} 
+                        />
+                        <Line type="monotone" dataKey="score" stroke="var(--tactical-blue)" strokeWidth={3} dot={{ r: 4, fill: 'var(--tactical-blue)' }} activeDot={{ r: 6 }} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                 </div>
+
                  <div className="space-y-6">
                     {[
                       { cat: 'Defence Intelligence', val: 85, color: 'bg-blue-500' },

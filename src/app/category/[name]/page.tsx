@@ -1,8 +1,18 @@
 import connectToDatabase from '@/lib/mongoose';
 import { Article } from '@/models/Article';
 import { notFound } from 'next/navigation';
-import { Clock } from 'lucide-react';
 import NewsArticleClient from '@/components/NewsArticleClient';
+
+interface ArticleType {
+  _id: string;
+  title: string;
+  content: string;
+  summary?: string;
+  category: string;
+  sourceUrl?: string;
+  imageUrl?: string;
+  publishedAt: string;
+}
 
 export const revalidate = 60;
 
@@ -25,6 +35,12 @@ export async function generateMetadata({ params }: CategoryPageProps) {
   const { name } = await params;
   return {
     title: `${name} News - Dfence Prep`,
+    description: `Stay updated with the latest ${name} news, analysis, and updates for defense exam preparation.`,
+    openGraph: {
+      title: `${name} News - Dfence Prep`,
+      description: `Stay updated with the latest ${name} news, analysis, and updates for defense exam preparation.`,
+      type: 'website',
+    },
   };
 }
 
@@ -38,6 +54,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   }
 
   await connectToDatabase();
+  // eslint-disable-next-line react-hooks/purity
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
   
   // Fetch articles for this category within last 7 days
@@ -49,6 +66,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     .limit(20)
     .lean();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const serializedArticles = articles.map((article: any) => {
     const serialized = JSON.parse(JSON.stringify(article));
     return {
@@ -57,19 +75,20 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     };
   });
 
+  // eslint-disable-next-line react-hooks/purity
   const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
   
-  const recentArticles = serializedArticles.filter((a: any) => new Date(a.publishedAt) >= twentyFourHoursAgo);
-  const olderArticles = serializedArticles.filter((a: any) => new Date(a.publishedAt) < twentyFourHoursAgo);
+  const recentArticles = serializedArticles.filter((a: ArticleType) => new Date(a.publishedAt) >= twentyFourHoursAgo);
+  const olderArticles = serializedArticles.filter((a: ArticleType) => new Date(a.publishedAt) < twentyFourHoursAgo);
 
 
-  const ArticleGrid = ({ items, emptyMessage }: { items: any[], emptyMessage: string }) => {
+  const ArticleGrid = ({ items, emptyMessage }: { items: ArticleType[], emptyMessage: string }) => {
     if (items.length === 0) {
       return <p className="text-slate-500 bg-white p-6 rounded-lg text-center shadow-sm">{emptyMessage}</p>;
     }
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
-        {items.map((article: any, index: number) => (
+        {items.map((article: ArticleType, index: number) => (
           <NewsArticleClient key={article._id} article={article} index={index} />
         ))}
       </div>
