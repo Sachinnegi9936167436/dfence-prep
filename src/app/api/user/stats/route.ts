@@ -97,6 +97,7 @@ Output ONLY the report text, no quotes or extra text.`;
         streak: user.streak || 0,
         badges: user.badges || [],
         subscriptionStatus: user.subscriptionStatus || 'inactive',
+        subscriptionPlan: user.subscriptionPlan || 'none',
         fieldReport
       }
     });

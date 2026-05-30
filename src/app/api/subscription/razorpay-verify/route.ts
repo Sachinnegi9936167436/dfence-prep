@@ -59,6 +59,7 @@ export async function POST(req: Request) {
     }
 
     user.subscriptionStatus = 'active';
+    user.subscriptionPlan = payment.plan;
 
     let daysToAdd = 0;
     if (payment.plan === '1_week') daysToAdd = 7;

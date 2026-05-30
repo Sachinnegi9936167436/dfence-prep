@@ -32,6 +32,7 @@ export default async function SubscriptionCheck() {
       // Update status if expired
       if (user && user.subscriptionStatus === 'active') {
         user.subscriptionStatus = 'inactive';
+        user.subscriptionPlan = 'none';
         await user.save();
       }
       

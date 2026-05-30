@@ -11,6 +11,7 @@ export interface IUser extends Document {
   badges?: string[];
   pushSubscription?: unknown;
   subscriptionStatus: 'active' | 'inactive' | 'pending';
+  subscriptionPlan?: '1_week' | '1_month' | '3_months' | 'none';
   subscriptionExpiry: Date | null;
   role: 'admin' | 'user';
   isVerified: boolean;
@@ -37,6 +38,11 @@ const UserSchema: Schema = new Schema({
     type: String, 
     enum: ['active', 'inactive', 'pending'], 
     default: 'inactive' 
+  },
+  subscriptionPlan: {
+    type: String,
+    enum: ['1_week', '1_month', '3_months', 'none'],
+    default: 'none'
   },
   subscriptionExpiry: { type: Date, default: null },
   role: { type: String, enum: ['admin', 'user'], default: 'user' },

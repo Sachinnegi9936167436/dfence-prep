@@ -107,17 +107,20 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
                   Tactical Summary
                 </h4>
                 
-                {article.isPremium && session?.subscriptionStatus !== 'active' ? (
+                {article.isPremium && (
+                  session?.subscriptionStatus !== 'active' || 
+                  (session?.subscriptionPlan !== '1_month' && session?.subscriptionPlan !== '3_months')
+                ) ? (
                   <div className="relative">
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white/90 z-10"></div>
                     <div className="blur-[6px] select-none space-y-4">
                        <p className="text-slate-700 font-medium leading-loose text-lg">
-                          This premium intelligence is restricted to Elite Personnel. 
+                          This premium intelligence is restricted to Command Monthly and Officer Quarterly tiers. 
                           It contains high-level strategic analysis and specific actionable data 
                           that provides a tactical advantage for competitive examinations.
                        </p>
                        <p className="text-slate-700 font-medium leading-loose text-lg">
-                          Upgrade to Premium to unlock the full summary, AI-generated explanations, 
+                          Upgrade your subscription to unlock the full summary, AI-generated explanations, 
                           and specialized drills related to this sector.
                        </p>
                     </div>

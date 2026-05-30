@@ -38,6 +38,7 @@ export async function POST(req: Request) {
       const user = await User.findById(payment.userId);
       if (user) {
         user.subscriptionStatus = 'active';
+        user.subscriptionPlan = payment.plan;
         
         let daysToAdd = 0;
         if (payment.plan === '1_week') daysToAdd = 7;

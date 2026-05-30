@@ -50,7 +50,8 @@ export async function POST(req: Request) {
       email: user.email, 
       name: user.name,
       role: user.role || 'user',
-      subscriptionStatus: user.subscriptionStatus || 'inactive'
+      subscriptionStatus: user.subscriptionStatus || 'inactive',
+      subscriptionPlan: user.subscriptionPlan || 'none'
     });
 
     return NextResponse.json({ success: true, message: 'Logged in successfully' });
