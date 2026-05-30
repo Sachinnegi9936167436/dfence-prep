@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import connectToDatabase from '@/lib/mongoose';
 import { Payment } from '@/models/Payment';
 import { User } from '@/models/User';
-import { getSession } from '@/lib/auth';
+import { getSession, setSessionCookie } from '@/lib/auth';
 
 export async function POST(req: Request) {
   try {
@@ -76,6 +76,16 @@ export async function POST(req: Request) {
 
     user.subscriptionExpiry = newExpiry;
     await user.save();
+
+    // Refresh session cookie with the new active subscription status and plan
+    await setSessionCookie({ 
+      userId: user._id.toString(), 
+      email: user.email, 
+      name: user.name,
+      role: user.role || 'user',
+      subscriptionStatus: 'active',
+      subscriptionPlan: payment.plan
+    });
 
     return NextResponse.json({ success: true, message: 'Payment verified and subscription activated' });
   } catch (error: unknown) {
