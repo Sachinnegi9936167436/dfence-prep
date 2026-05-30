@@ -1,14 +1,16 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Loader2, Plus, RefreshCw, CheckCircle, XCircle, Trash2, Users, Pencil, X } from 'lucide-react';
+import { Loader2, Plus, RefreshCw, Trash2, Users, Pencil, X } from 'lucide-react';
 
 interface Payment {
   _id: string;
   userId?: { email: string };
   plan: string;
   amount: number;
-  utrNumber: string;
+  utrNumber?: string;
+  razorpayOrderId?: string;
+  razorpayPaymentId?: string;
   status: string;
   createdAt: string;
 }
@@ -19,6 +21,7 @@ interface User {
   name?: string;
   role: string;
   subscriptionStatus: string;
+  subscriptionPlan?: string;
   lastLogin?: string;
 }
 
@@ -43,7 +46,7 @@ export default function AdminDashboard() {
   const [newName, setNewName] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newRole, setNewRole] = useState('user');
-  const [newSubStatus, setNewSubStatus] = useState('inactive');
+  const [newSubPlan, setNewSubPlan] = useState('none');
   const [addingUser, setAddingUser] = useState(false);
   const [userError, setUserError] = useState('');
 
@@ -52,7 +55,7 @@ export default function AdminDashboard() {
   const [editName, setEditName] = useState('');
   const [editEmail, setEditEmail] = useState('');
   const [editRole, setEditRole] = useState('user');
-  const [editSubStatus, setEditSubStatus] = useState('inactive');
+  const [editSubPlan, setEditSubPlan] = useState('none');
   const [editPassword, setEditPassword] = useState('');
   const [savingEdit, setSavingEdit] = useState(false);
   const [editError, setEditError] = useState('');
@@ -85,12 +88,12 @@ export default function AdminDashboard() {
       const res = await fetch('/api/admin/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: newEmail, name: newName, password: newPassword, role: newRole, subscriptionStatus: newSubStatus })
+        body: JSON.stringify({ email: newEmail, name: newName, password: newPassword, role: newRole, subscriptionPlan: newSubPlan })
       });
       const data = await res.json();
       if (res.ok && data.success) {
         fetchUsers();
-        setNewEmail(''); setNewName(''); setNewPassword(''); setNewRole('user'); setNewSubStatus('inactive');
+        setNewEmail(''); setNewName(''); setNewPassword(''); setNewRole('user'); setNewSubPlan('none');
       } else {
         setUserError(data.error || 'Registration failed');
       }
@@ -121,7 +124,7 @@ export default function AdminDashboard() {
     setEditName(user.name || '');
     setEditEmail(user.email || '');
     setEditRole(user.role || 'user');
-    setEditSubStatus(user.subscriptionStatus || 'inactive');
+    setEditSubPlan(user.subscriptionPlan || 'none');
     setEditPassword('');
     setEditError('');
   };
@@ -135,7 +138,7 @@ export default function AdminDashboard() {
       const res = await fetch('/api/admin/users', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: editingUser._id, name: editName, email: editEmail, role: editRole, subscriptionStatus: editSubStatus, newPassword: editPassword || undefined })
+        body: JSON.stringify({ id: editingUser._id, name: editName, email: editEmail, role: editRole, subscriptionPlan: editSubPlan, newPassword: editPassword || undefined })
       });
       const data = await res.json();
       if (res.ok && data.success) {
@@ -163,21 +166,6 @@ export default function AdminDashboard() {
       console.error(err);
     } finally {
       setLoadingPayments(false);
-    }
-  };
-
-  const handleUpdatePayment = async (paymentId: string, status: string) => {
-    try {
-      const res = await fetch('/api/admin/payments', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ paymentId, status })
-      });
-      if (res.ok) {
-        fetchPayments(); // refresh list
-      }
-    } catch (err) {
-      console.error(err);
     }
   };
 
@@ -269,12 +257,12 @@ export default function AdminDashboard() {
         </div>
 
         <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
-          <h2 className="text-xl font-bold text-slate-900 mb-6">Subscription Approvals</h2>
+          <h2 className="text-xl font-bold text-slate-900 mb-6">Paid Subscriptions</h2>
           
           {loadingPayments ? (
             <div className="flex justify-center p-8"><Loader2 className="h-8 w-8 animate-spin text-blue-600" /></div>
           ) : payments.length === 0 ? (
-            <p className="text-slate-500 text-center py-8 bg-slate-50 rounded-xl border border-dashed border-slate-200">No payment requests found.</p>
+            <p className="text-slate-500 text-center py-8 bg-slate-50 rounded-xl border border-dashed border-slate-200">No payment records found.</p>
           ) : (
             <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
               {payments.map(payment => (
@@ -283,7 +271,12 @@ export default function AdminDashboard() {
                     <div>
                       <p className="font-bold text-slate-900">{payment.userId?.email}</p>
                       <p className="text-slate-500 text-xs">Plan: <span className="font-semibold text-slate-700">{payment.plan}</span> (₹{payment.amount})</p>
-                      <p className="text-slate-500 text-xs font-mono mt-1">UTR: <span className="bg-slate-200 px-1 py-0.5 rounded text-slate-800">{payment.utrNumber}</span></p>
+                      {payment.utrNumber && (
+                        <p className="text-slate-500 text-xs font-mono mt-1">UTR: <span className="bg-slate-200 px-1 py-0.5 rounded text-slate-800">{payment.utrNumber}</span></p>
+                      )}
+                      {payment.razorpayPaymentId && (
+                        <p className="text-slate-500 text-xs font-mono mt-1">Payment ID: <span className="bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded font-semibold">{payment.razorpayPaymentId}</span></p>
+                      )}
                       <p className="text-slate-400 text-xs mt-1">{new Date(payment.createdAt).toLocaleString()}</p>
                     </div>
                     <div>
@@ -295,17 +288,6 @@ export default function AdminDashboard() {
                       </span>
                     </div>
                   </div>
-                  
-                  {payment.status === 'pending' && (
-                    <div className="flex space-x-2 pt-2 border-t border-slate-200">
-                      <button onClick={() => handleUpdatePayment(payment._id, 'approved')} className="flex-1 bg-green-100 text-green-700 hover:bg-green-200 py-1.5 rounded-lg flex items-center justify-center font-semibold transition">
-                        <CheckCircle className="h-4 w-4 mr-1" /> Approve
-                      </button>
-                      <button onClick={() => handleUpdatePayment(payment._id, 'rejected')} className="flex-1 bg-red-100 text-red-700 hover:bg-red-200 py-1.5 rounded-lg flex items-center justify-center font-semibold transition">
-                        <XCircle className="h-4 w-4 mr-1" /> Reject
-                      </button>
-                    </div>
-                  )}
                 </div>
               ))}
             </div>
@@ -353,10 +335,12 @@ export default function AdminDashboard() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Subscription Auth</label>
-                  <select value={newSubStatus} onChange={e => setNewSubStatus(e.target.value)} className="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 shadow-sm outline-none">
-                    <option value="inactive">INACTIVE</option>
-                    <option value="active">AUTHORIZED</option>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Subscription Plan</label>
+                  <select value={newSubPlan} onChange={e => setNewSubPlan(e.target.value)} className="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 shadow-sm outline-none">
+                    <option value="none">NONE</option>
+                    <option value="1_week">WEEKLY (7 days)</option>
+                    <option value="1_month">MONTHLY (30 days)</option>
+                    <option value="3_months">QUARTERLY (90 days)</option>
                   </select>
                 </div>
               </div>
@@ -404,7 +388,9 @@ export default function AdminDashboard() {
                             <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest ${user.role === 'admin' ? 'bg-purple-100/80 text-purple-700 ring-1 ring-purple-200/50' : 'bg-slate-100 text-slate-600 ring-1 ring-slate-200/50'}`}>{user.role}</span>
                           </td>
                           <td className="px-5 py-4">
-                            <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest ${user.subscriptionStatus === 'active' ? 'bg-green-100 text-green-700 ring-1 ring-green-200/50' : 'bg-slate-100 text-slate-600 ring-1 ring-slate-200/50'}`}>{user.subscriptionStatus}</span>
+                            <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest ${user.subscriptionStatus === 'active' ? 'bg-green-100 text-green-700 ring-1 ring-green-200/50' : 'bg-slate-100 text-slate-600 ring-1 ring-slate-200/50'}`}>
+                              {user.subscriptionStatus === 'active' ? (user.subscriptionPlan || 'ACTIVE').toUpperCase() : 'INACTIVE'}
+                            </span>
                           </td>
                           <td className="px-5 py-4">
                             <p className="text-xs font-mono text-slate-500">{user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'NEVER'}</p>
@@ -443,10 +429,12 @@ export default function AdminDashboard() {
                                   </select>
                                 </div>
                                 <div>
-                                  <label className="block text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-wider">Subscription</label>
-                                  <select value={editSubStatus} onChange={e => setEditSubStatus(e.target.value)} className="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 outline-none shadow-sm">
-                                    <option value="inactive">INACTIVE</option>
-                                    <option value="active">ACTIVE</option>
+                                  <label className="block text-[10px] font-bold text-slate-500 mb-1 uppercase tracking-wider">Subscription Plan</label>
+                                  <select value={editSubPlan} onChange={e => setEditSubPlan(e.target.value)} className="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 outline-none shadow-sm">
+                                    <option value="none">NONE</option>
+                                    <option value="1_week">WEEKLY (7 days)</option>
+                                    <option value="1_month">MONTHLY (30 days)</option>
+                                    <option value="3_months">QUARTERLY (90 days)</option>
                                   </select>
                                 </div>
                                 <div className="sm:col-span-2 lg:col-span-2">

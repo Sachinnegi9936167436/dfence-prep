@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Check, ShieldCheck, Loader2, Star, Target, BarChart3, BrainCircuit, FileText } from 'lucide-react';
 import PremiumBadge from '@/components/PremiumBadge';
@@ -10,6 +10,13 @@ const PLANS = [
   { id: '1_month', name: 'Command Monthly', price: 50, duration: '30 days', features: ['Curated Defence Intelligence Feed', 'Premium Intelligence', 'Strategic Analytics', 'Priority Support'], popular: true },
   { id: '3_months', name: 'Officer Quarterly', price: 80, duration: '90 days', features: ['Everything in Monthly', 'PDF Command Reports', 'AI Exam Strategy', 'Offline Training Modules'], popular: false },
 ];
+
+const PLAN_TIERS: Record<string, number> = {
+  'none': 0,
+  '1_week': 1,
+  '1_month': 2,
+  '3_months': 3
+};
 
 const loadRazorpayScript = () => {
   return new Promise((resolve) => {
@@ -28,7 +35,28 @@ const loadRazorpayScript = () => {
 export default function PricingPage() {
   const [loadingPlanId, setLoadingPlanId] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [currentUserPlan, setCurrentUserPlan] = useState<string>('none');
+  const [subscriptionStatus, setSubscriptionStatus] = useState<string>('inactive');
   const router = useRouter();
+
+  const fetchUserSubscription = async () => {
+    try {
+      const res = await fetch('/api/user/stats');
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.success && data.stats) {
+          setCurrentUserPlan(data.stats.subscriptionPlan || 'none');
+          setSubscriptionStatus(data.stats.subscriptionStatus || 'inactive');
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching subscription stats:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserSubscription();
+  }, []);
 
   const handleCheckout = async (plan: typeof PLANS[0]) => {
     setLoadingPlanId(plan.id);
@@ -79,6 +107,7 @@ export default function PricingPage() {
             const verifyData = await verifyRes.json();
             if (verifyRes.ok && verifyData.success) {
               setSuccess(true);
+              await fetchUserSubscription();
             } else {
               alert(verifyData.error || 'Payment verification failed. Please contact support.');
             }
@@ -153,45 +182,90 @@ export default function PricingPage() {
         <div className="space-y-24">
           {/* Comparison Bento Grid */}
           <div className="grid md:grid-cols-3 gap-8">
-            {PLANS.map((plan, index) => (
-              <div 
-                key={plan.id} 
-                className={`group relative glass-panel p-10 rounded-[2.5rem] transition-all duration-500 hover:-translate-y-3 opacity-0 animate-fade-in-up stagger-${index + 1} ${plan.popular ? 'border-blue-500 ring-8 ring-blue-500/5 shadow-[0_0_40px_rgba(37,99,235,0.25)]' : ''}`}
-              >
-                {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <PremiumBadge />
-                  </div>
-                )}
-                
-                <div className="mb-8">
-                  <h3 className="text-sm font-black uppercase tracking-widest text-slate-400 mb-2">{plan.name}</h3>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-5xl font-black text-slate-900 font-heading">₹{plan.price}</span>
-                    <span className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">/ {plan.duration}</span>
-                  </div>
-                </div>
+            {PLANS.map((plan, index) => {
+              const isCurrent = subscriptionStatus === 'active' && currentUserPlan === plan.id;
+              const currentTier = PLAN_TIERS[currentUserPlan] || 0;
+              const planTier = PLAN_TIERS[plan.id] || 0;
 
-                <ul className="space-y-5 mb-10">
-                  {plan.features.map((feature, i) => (
-                    <li key={i} className="flex items-start gap-4">
-                      <div className={`mt-1 h-5 w-5 rounded-full flex items-center justify-center shrink-0 ${plan.popular ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-400'}`}>
-                         <Check size={12} strokeWidth={3} />
-                      </div>
-                      <span className="text-slate-600 font-medium text-sm leading-tight">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
+              let buttonText = 'Select Plan';
+              let isDisabled = false;
 
-                <button 
-                  onClick={() => handleCheckout(plan)}
-                  disabled={loadingPlanId !== null}
-                  className={`w-full py-5 rounded-2xl font-black uppercase tracking-widest text-xs transition-all shadow-xl active:scale-95 ${plan.popular ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-blue-500/30' : 'bg-slate-900 text-white hover:bg-slate-800 shadow-slate-900/10'} disabled:opacity-50 flex justify-center items-center`}
+              if (subscriptionStatus === 'active') {
+                if (isCurrent) {
+                  buttonText = 'Current Plan';
+                  isDisabled = true;
+                } else if (planTier > currentTier) {
+                  buttonText = 'Upgrade Plan';
+                } else {
+                  buttonText = 'Downgrade not available';
+                  isDisabled = true;
+                }
+              }
+
+              return (
+                <div 
+                  key={plan.id} 
+                  className={`group relative glass-panel p-10 rounded-[2.5rem] transition-all duration-500 hover:-translate-y-3 opacity-0 animate-fade-in-up stagger-${index + 1} ${
+                    isCurrent 
+                      ? 'border-green-500 ring-8 ring-green-500/5 shadow-[0_0_40px_rgba(34,197,94,0.25)]' 
+                      : (subscriptionStatus === 'active' && planTier > currentTier)
+                        ? 'border-blue-500 ring-8 ring-blue-500/5 shadow-[0_0_40px_rgba(37,99,235,0.25)]'
+                        : plan.popular 
+                          ? 'border-blue-500 ring-8 ring-blue-500/5 shadow-[0_0_40px_rgba(37,99,235,0.25)]' 
+                          : ''
+                  }`}
                 >
-                  {loadingPlanId === plan.id ? <Loader2 className="h-4 w-4 animate-spin text-white" /> : "Select Plan"}
-                </button>
-              </div>
-            ))}
+                  {isCurrent ? (
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-green-500 text-white text-[10px] font-black uppercase tracking-[0.15em] shadow-lg shadow-green-500/20">
+                      Active Plan
+                    </div>
+                  ) : (subscriptionStatus === 'active' && planTier > currentTier) ? (
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-blue-600 text-white text-[10px] font-black uppercase tracking-[0.15em] shadow-lg shadow-blue-600/20">
+                      Upgrade Available
+                    </div>
+                  ) : plan.popular ? (
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                      <PremiumBadge />
+                    </div>
+                  ) : null}
+                  
+                  <div className="mb-8">
+                    <h3 className="text-sm font-black uppercase tracking-widest text-slate-400 mb-2">{plan.name}</h3>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-5xl font-black text-slate-900 font-heading">₹{plan.price}</span>
+                      <span className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">/ {plan.duration}</span>
+                    </div>
+                  </div>
+
+                  <ul className="space-y-5 mb-10">
+                    {plan.features.map((feature, i) => (
+                      <li key={i} className="flex items-start gap-4">
+                        <div className={`mt-1 h-5 w-5 rounded-full flex items-center justify-center shrink-0 ${plan.popular ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-400'}`}>
+                           <Check size={12} strokeWidth={3} />
+                        </div>
+                        <span className="text-slate-600 font-medium text-sm leading-tight">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <button 
+                    onClick={() => handleCheckout(plan)}
+                    disabled={loadingPlanId !== null || isDisabled}
+                    className={`w-full py-5 rounded-2xl font-black uppercase tracking-widest text-xs transition-all shadow-xl active:scale-95 ${
+                      isCurrent 
+                        ? 'bg-green-600 text-white cursor-default shadow-green-500/20' 
+                        : isDisabled 
+                          ? 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none' 
+                          : plan.popular 
+                            ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-blue-500/30' 
+                            : 'bg-slate-900 text-white hover:bg-slate-800 shadow-slate-900/10'
+                    } disabled:opacity-50 flex justify-center items-center`}
+                  >
+                    {loadingPlanId === plan.id ? <Loader2 className="h-4 w-4 animate-spin text-white" /> : buttonText}
+                  </button>
+                </div>
+              );
+            })}
           </div>
 
           {/* Value Proposition Grid */}

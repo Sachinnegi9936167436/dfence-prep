@@ -49,20 +49,12 @@ export async function POST(req: Request) {
       receipt: `rcpt_${String(session.userId).slice(-6)}_${Date.now()}`,
       notes: {
         projectName: 'DfencePrep',
+        plan,
+        userId: String(session.userId),
       },
     };
 
     const order = await razorpay.orders.create(options);
-
-    await Payment.create({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      userId: session.userId as any,
-      plan,
-      amount: price,
-      razorpayOrderId: order.id,
-      paymentGateway: 'razorpay',
-      status: 'pending',
-    });
 
     return NextResponse.json({
       success: true,

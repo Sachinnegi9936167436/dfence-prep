@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import connectToDatabase from '@/lib/mongoose';
-import { Payment } from '@/models/Payment';
+import { Payment, IPayment } from '@/models/Payment';
 import { User } from '@/models/User';
 import { getSession, setSessionCookie } from '@/lib/auth';
+import Razorpay from 'razorpay';
 
 export async function POST(req: Request) {
   try {
@@ -18,9 +19,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 });
     }
 
+    const keyId = process.env.RAZORPAY_KEY_ID;
     const keySecret = process.env.RAZORPAY_KEY_SECRET;
-    if (!keySecret) {
-      console.error('Razorpay secret key is not configured in environment variables.');
+    if (!keyId || !keySecret) {
+      console.error('Razorpay API keys are not configured in environment variables.');
       return NextResponse.json({ error: 'Payment gateway configuration error' }, { status: 500 });
     }
 
@@ -36,21 +38,42 @@ export async function POST(req: Request) {
 
     await connectToDatabase();
 
-    // Find the corresponding payment record
-    const payment = await Payment.findOne({ razorpayOrderId });
-    if (!payment) {
-      return NextResponse.json({ error: 'Payment record not found' }, { status: 404 });
-    }
-
-    if (payment.status === 'approved') {
+    // Check if this payment has already been processed to prevent duplicates
+    const existingPayment = await Payment.findOne({ razorpayPaymentId });
+    if (existingPayment) {
       return NextResponse.json({ success: true, message: 'Payment already verified and processed' });
     }
 
-    // Update payment record
-    payment.status = 'approved';
-    payment.razorpayPaymentId = razorpayPaymentId;
-    payment.razorpaySignature = razorpaySignature;
-    await payment.save();
+    // Fetch the order from Razorpay to retrieve the plan and userId metadata
+    const razorpay = new Razorpay({
+      key_id: keyId,
+      key_secret: keySecret,
+    });
+
+    const order = (await razorpay.orders.fetch(razorpayOrderId)) as any;
+    if (!order) {
+      return NextResponse.json({ error: 'Order not found in Razorpay' }, { status: 404 });
+    }
+
+    const plan = order.notes?.plan;
+    const orderUserId = order.notes?.userId;
+    const amount = Number(order.amount) / 100; // convert paise to rupees
+
+    if (!plan) {
+      return NextResponse.json({ error: 'Plan details not found in Razorpay order notes' }, { status: 400 });
+    }
+
+    // Create payment record directly as approved since it has been verified
+    const payment = (await Payment.create({
+      userId: (orderUserId || session.userId) as any,
+      plan: plan as any,
+      amount,
+      razorpayOrderId,
+      razorpayPaymentId,
+      razorpaySignature,
+      paymentGateway: 'razorpay',
+      status: 'approved',
+    })) as IPayment;
 
     // Update user subscription
     const user = await User.findById(payment.userId);
@@ -96,3 +119,5 @@ export async function POST(req: Request) {
     );
   }
 }
+
+

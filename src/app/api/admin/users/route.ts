@@ -29,7 +29,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { email, password, name, role, subscriptionStatus } = await request.json();
+    const { email, password, name, role, subscriptionPlan } = await request.json();
 
     if (!email || !password) {
       return NextResponse.json({ success: false, error: 'Email and password are required parameters' }, { status: 400 });
@@ -46,12 +46,28 @@ export async function POST(request: Request) {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
+    const plan = subscriptionPlan || 'none';
+    let status: 'active' | 'inactive' = 'inactive';
+    let expiry = null;
+    if (plan !== 'none') {
+      status = 'active';
+      let days = 0;
+      if (plan === '1_week') days = 7;
+      else if (plan === '1_month') days = 30;
+      else if (plan === '3_months') days = 90;
+      
+      expiry = new Date();
+      expiry.setDate(expiry.getDate() + days);
+    }
+
     const newUser = await User.create({
       email,
       password: hashedPassword,
       name: name || '',
       role: role || 'user',
-      subscriptionStatus: subscriptionStatus || 'inactive',
+      subscriptionStatus: status,
+      subscriptionPlan: plan,
+      subscriptionExpiry: expiry,
       isVerified: true
     });
 
@@ -106,7 +122,7 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id, name, email, role, subscriptionStatus, newPassword } = await request.json();
+    const { id, name, email, role, subscriptionPlan, newPassword } = await request.json();
 
     if (!id || !email) {
       return NextResponse.json({ success: false, error: 'User ID and Email are required parameters for updating.' }, { status: 400 });
@@ -119,28 +135,53 @@ export async function PUT(request: Request) {
       return NextResponse.json({ success: false, error: 'Another user is already actively using this designated email.' }, { status: 400 });
     }
 
-    const updatePayload: {
-      name?: string;
-      email?: string;
-      role?: string;
-      subscriptionStatus?: string;
-      password?: string;
-    } = { name, email, role, subscriptionStatus };
-    if (newPassword && newPassword.length >= 6) {
-      updatePayload.password = await bcrypt.hash(newPassword, 10);
-    }
-
-    const updatedUser = await User.findByIdAndUpdate(
-      id,
-      updatePayload,
-      { new: true }
-    ).select('-password');
-
-    if (!updatedUser) {
+    const user = await User.findById(id);
+    if (!user) {
       return NextResponse.json({ success: false, error: 'User record sequence could not be found' }, { status: 404 });
     }
 
-    return NextResponse.json({ success: true, user: updatedUser });
+    // Update basic info
+    user.name = name || '';
+    user.email = email;
+    user.role = role || 'user';
+
+    if (newPassword && newPassword.length >= 6) {
+      user.password = await bcrypt.hash(newPassword, 10);
+    }
+
+    // Update subscription plan if provided
+    if (subscriptionPlan !== undefined) {
+      const isPlanChanging = subscriptionPlan !== user.subscriptionPlan;
+      const isCurrentlyInactive = user.subscriptionStatus !== 'active' || !user.subscriptionExpiry || user.subscriptionExpiry < new Date();
+      
+      if (subscriptionPlan === 'none') {
+        user.subscriptionPlan = 'none';
+        user.subscriptionStatus = 'inactive';
+        user.subscriptionExpiry = null;
+      } else if (isPlanChanging || isCurrentlyInactive) {
+        user.subscriptionPlan = subscriptionPlan;
+        user.subscriptionStatus = 'active';
+        let days = 0;
+        if (subscriptionPlan === '1_week') days = 7;
+        else if (subscriptionPlan === '1_month') days = 30;
+        else if (subscriptionPlan === '3_months') days = 90;
+        
+        const baseDate = user.subscriptionExpiry && user.subscriptionExpiry > new Date()
+          ? user.subscriptionExpiry
+          : new Date();
+        const newExpiry = new Date(baseDate);
+        newExpiry.setDate(newExpiry.getDate() + days);
+        user.subscriptionExpiry = newExpiry;
+      }
+    }
+
+    await user.save();
+
+    // Remove the password buffer before transmitting back
+    const userObj = user.toObject();
+    delete userObj.password;
+
+    return NextResponse.json({ success: true, user: userObj });
   } catch (error: unknown) {
     return NextResponse.json({ success: false, error: (error as Error).message }, { status: 500 });
   }

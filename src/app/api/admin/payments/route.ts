@@ -12,7 +12,7 @@ export async function GET() {
 
     await connectToDatabase();
     // Fetch payments with user emails populated
-    const payments = await Payment.find().populate('userId', 'email name').sort({ createdAt: -1 });
+    const payments = await Payment.find({ status: 'approved' }).populate('userId', 'email name').sort({ createdAt: -1 });
     
     return NextResponse.json({ success: true, payments });
   } catch {
