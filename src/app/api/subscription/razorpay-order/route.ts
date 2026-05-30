@@ -46,7 +46,10 @@ export async function POST(req: Request) {
     const options = {
       amount: amountInPaise,
       currency: 'INR',
-      receipt: `rcpt_${session.userId}_${Date.now()}`,
+      receipt: `rcpt_${String(session.userId).slice(-6)}_${Date.now()}`,
+      notes: {
+        projectName: 'DfencePrep',
+      },
     };
 
     const order = await razorpay.orders.create(options);
