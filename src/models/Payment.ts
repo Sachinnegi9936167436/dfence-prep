@@ -4,7 +4,11 @@ export interface IPayment extends Document {
   userId: Types.ObjectId;
   plan: '1_week' | '1_month' | '3_months';
   amount: number;
-  utrNumber: string;
+  utrNumber?: string;
+  razorpayOrderId?: string;
+  razorpayPaymentId?: string;
+  razorpaySignature?: string;
+  paymentGateway: 'manual' | 'razorpay';
   status: 'pending' | 'approved' | 'rejected';
   createdAt: Date;
 }
@@ -17,7 +21,15 @@ const PaymentSchema: Schema = new Schema({
     required: true 
   },
   amount: { type: Number, required: true },
-  utrNumber: { type: String, required: true, unique: true },
+  utrNumber: { type: String, unique: true, sparse: true },
+  razorpayOrderId: { type: String },
+  razorpayPaymentId: { type: String },
+  razorpaySignature: { type: String },
+  paymentGateway: { 
+    type: String, 
+    enum: ['manual', 'razorpay'], 
+    default: 'manual' 
+  },
   status: { 
     type: String, 
     enum: ['pending', 'approved', 'rejected'], 
