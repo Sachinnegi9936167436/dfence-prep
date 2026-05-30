@@ -2,6 +2,7 @@ import connectToDatabase from '@/lib/mongoose';
 import { Article } from '@/models/Article';
 import { notFound } from 'next/navigation';
 import NewsArticleClient from '@/components/NewsArticleClient';
+import OlderNewsArchive from '@/components/OlderNewsArchive';
 
 interface ArticleType {
   _id: string;
@@ -55,32 +56,25 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   await connectToDatabase();
   // eslint-disable-next-line react-hooks/purity
-  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
   
-  // Fetch articles for this category within last 7 days
+  // Fetch articles for this category within last 24 hours
   const articles = await Article.find({ 
     category: categoryName,
-    publishedAt: { $gte: sevenDaysAgo }
+    publishedAt: { $gte: twentyFourHoursAgo }
   })
     .sort({ publishedAt: -1 })
     .limit(20)
     .lean();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const serializedArticles = articles.map((article: any) => {
+  const recentArticles = articles.map((article: any) => {
     const serialized = JSON.parse(JSON.stringify(article));
     return {
       ...serialized,
       content: serialized.summary || (serialized.content.length > 200 ? serialized.content.substring(0, 200) + '...' : serialized.content),
     };
   });
-
-  // eslint-disable-next-line react-hooks/purity
-  const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-  
-  const recentArticles = serializedArticles.filter((a: ArticleType) => new Date(a.publishedAt) >= twentyFourHoursAgo);
-  const olderArticles = serializedArticles.filter((a: ArticleType) => new Date(a.publishedAt) < twentyFourHoursAgo);
-
 
   const ArticleGrid = ({ items, emptyMessage }: { items: ArticleType[], emptyMessage: string }) => {
     if (items.length === 0) {
@@ -111,10 +105,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
          <ArticleGrid items={recentArticles} emptyMessage="No new articles published in the last 24 hours." />
       </div>
 
-      <div className="space-y-6">
-         <h2 className="text-2xl font-semibold tracking-tight text-slate-700 border-t pt-8">Older News Archive</h2>
-         <ArticleGrid items={olderArticles} emptyMessage="No older archived articles found in this category." />
-      </div>
+      <OlderNewsArchive category={categoryName} before={twentyFourHoursAgo.toISOString()} />
 
     </div>
   );
