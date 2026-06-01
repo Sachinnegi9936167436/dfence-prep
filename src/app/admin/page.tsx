@@ -63,6 +63,14 @@ export default function AdminDashboard() {
   useEffect(() => {
     fetchPayments();
     fetchUsers();
+
+    // Poll payment & user stats every 10 seconds to update in real-time
+    const interval = setInterval(() => {
+      fetchPayments();
+      fetchUsers();
+    }, 10000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const fetchUsers = async () => {
@@ -257,7 +265,17 @@ export default function AdminDashboard() {
         </div>
 
         <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
-          <h2 className="text-xl font-bold text-slate-900 mb-6">Paid Subscriptions</h2>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-bold text-slate-900">Paid Subscriptions</h2>
+            <button
+              type="button"
+              onClick={fetchPayments}
+              className="p-2 hover:bg-slate-50 rounded-xl transition text-slate-400 hover:text-slate-600 cursor-pointer"
+              title="Refresh Payments"
+            >
+              <RefreshCw className="h-4 w-4" />
+            </button>
+          </div>
           
           {loadingPayments ? (
             <div className="flex justify-center p-8"><Loader2 className="h-8 w-8 animate-spin text-blue-600" /></div>
@@ -267,12 +285,12 @@ export default function AdminDashboard() {
             <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
               {payments.map(payment => (
                 <div key={payment._id} className="p-4 border border-slate-200 rounded-xl bg-slate-50 text-sm flex flex-col space-y-3">
-                  <div className="flex justify-between items-start">
+                  <div className="flex justify-between items-start gap-4">
                     <div>
-                      <p className="font-bold text-slate-900">{payment.userId?.email}</p>
+                      <p className="font-bold text-slate-900">{payment.userId?.email || 'Unknown Email (Deleted)'}</p>
                       <p className="text-slate-500 text-xs">Plan: <span className="font-semibold text-slate-700">{payment.plan}</span> (₹{payment.amount})</p>
                       {payment.utrNumber && (
-                        <p className="text-slate-500 text-xs font-mono mt-1">UTR: <span className="bg-slate-200 px-1 py-0.5 rounded text-slate-800">{payment.utrNumber}</span></p>
+                        <p className="text-slate-500 text-xs font-mono mt-1">UTR: <span className="bg-slate-200 px-1 py-0.5 rounded text-slate-800 font-bold">{payment.utrNumber}</span></p>
                       )}
                       {payment.razorpayPaymentId && (
                         <p className="text-slate-500 text-xs font-mono mt-1">Payment ID: <span className="bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded font-semibold">{payment.razorpayPaymentId}</span></p>
@@ -293,6 +311,7 @@ export default function AdminDashboard() {
             </div>
           )}
         </div>
+
       </div>
 
       {/* Embedded Component Scope: Dedicated User Control Management */}

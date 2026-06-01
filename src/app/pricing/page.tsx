@@ -248,20 +248,18 @@ export default function PricingPage() {
                     ))}
                   </ul>
 
-                  <button 
+                  <button
                     onClick={() => handleCheckout(plan)}
-                    disabled={loadingPlanId !== null || isDisabled}
-                    className={`w-full py-5 rounded-2xl font-black uppercase tracking-widest text-xs transition-all shadow-xl active:scale-95 ${
-                      isCurrent 
-                        ? 'bg-green-600 text-white cursor-default shadow-green-500/20' 
-                        : isDisabled 
-                          ? 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none' 
-                          : plan.popular 
-                            ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-blue-500/30' 
-                            : 'bg-slate-900 text-white hover:bg-slate-800 shadow-slate-900/10'
-                    } disabled:opacity-50 flex justify-center items-center`}
+                    disabled={isDisabled || loadingPlanId === plan.id}
+                    className={`w-full py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all duration-300 ${
+                      isDisabled
+                        ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                        : plan.popular 
+                          ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-600/20 active:scale-95'
+                          : 'bg-slate-900 text-white hover:bg-slate-800 shadow-xl active:scale-95'
+                    }`}
                   >
-                    {loadingPlanId === plan.id ? <Loader2 className="h-4 w-4 animate-spin text-white" /> : buttonText}
+                    {loadingPlanId === plan.id ? 'Processing...' : buttonText}
                   </button>
                 </div>
               );
