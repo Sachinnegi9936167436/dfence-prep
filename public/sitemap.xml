@@ -1,63 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Homepage -->
   <url>
-    <loc>https://dfenceprep.com/</loc>
+    <loc>https://defnca.vercel.app/</loc>
     <lastmod>2026-06-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
+
+  <!-- Daily Quiz -->
   <url>
-    <loc>https://dfenceprep.com/daily-quiz</loc>
+    <loc>https://defnca.vercel.app/daily-quiz</loc>
     <lastmod>2026-06-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
+
+  <!-- Pricing -->
   <url>
-    <loc>https://dfenceprep.com/category/Defence</loc>
-    <lastmod>2026-06-03</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://dfenceprep.com/category/Sports</loc>
-    <lastmod>2026-06-03</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://dfenceprep.com/category/Awards</loc>
-    <lastmod>2026-06-03</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://dfenceprep.com/category/Books</loc>
-    <lastmod>2026-06-03</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://dfenceprep.com/category/Exercises</loc>
-    <lastmod>2026-06-03</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://dfenceprep.com/category/International%20Relations</loc>
-    <lastmod>2026-06-03</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://dfenceprep.com/pricing</loc>
+    <loc>https://defnca.vercel.app/pricing</loc>
     <lastmod>2026-06-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+
+  <!-- Leaderboard -->
   <url>
-    <loc>https://dfenceprep.com/leaderboard</loc>
+    <loc>https://defnca.vercel.app/leaderboard</loc>
     <lastmod>2026-06-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
+
+  <!-- SSB Simulator -->
+  <url>
+    <loc>https://defnca.vercel.app/ssb-simulator</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Campaign Map -->
+  <url>
+    <loc>https://defnca.vercel.app/campaign-map</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Category: Defence -->
+  <url>
+    <loc>https://defnca.vercel.app/category/Defence</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Category: Sports -->
+  <url>
+    <loc>https://defnca.vercel.app/category/Sports</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Category: Awards -->
+  <url>
+    <loc>https://defnca.vercel.app/category/Awards</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Category: Books -->
+  <url>
+    <loc>https://defnca.vercel.app/category/Books</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Category: Exercises -->
+  <url>
+    <loc>https://defnca.vercel.app/category/Exercises</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Category: International Relations -->
+  <url>
+    <loc>https://defnca.vercel.app/category/International%20Relations</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
 </urlset>
