@@ -1,6 +1,4 @@
 import { MetadataRoute } from 'next';
-import connectToDatabase from '@/lib/mongoose';
-import { Article } from '@/models/Article';
 import { siteUrl } from '@/lib/site';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -82,23 +80,37 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  // Dynamic article pages
+  // Dynamic article pages - load DB lazily to avoid breaking sitemap if DB is slow
   let articlePages: MetadataRoute.Sitemap = [];
   try {
-    await connectToDatabase();
-    const articles = await Article.find({}, { _id: 1, publishedAt: 1 })
-      .sort({ publishedAt: -1 })
-      .limit(200)
-      .lean();
+    const { default: connectToDatabase } = await import('@/lib/mongoose');
+    const { Article } = await import('@/models/Article');
 
-    articlePages = articles.map((article: any) => ({
-      url: `${baseUrl}/article/${article._id}`,
-      lastModified: new Date(article.publishedAt),
-      changeFrequency: 'weekly' as const,
-      priority: 0.7,
-    }));
+    // Set a timeout of 5 seconds max for DB
+    const dbPromise = (async () => {
+      await connectToDatabase();
+      return Article.find({}, { _id: 1, publishedAt: 1 })
+        .sort({ publishedAt: -1 })
+        .limit(200)
+        .lean();
+    })();
+
+    const timeoutPromise = new Promise<null>((resolve) =>
+      setTimeout(() => resolve(null), 5000)
+    );
+
+    const articles = await Promise.race([dbPromise, timeoutPromise]);
+
+    if (articles && Array.isArray(articles)) {
+      articlePages = articles.map((article: any) => ({
+        url: `${baseUrl}/article/${article._id}`,
+        lastModified: article.publishedAt ? new Date(article.publishedAt) : new Date(),
+        changeFrequency: 'weekly' as const,
+        priority: 0.7,
+      }));
+    }
   } catch {
-    // If DB fails, just return static pages
+    // If DB fails, fall back to static pages only
   }
 
   return [...staticPages, ...articlePages];
