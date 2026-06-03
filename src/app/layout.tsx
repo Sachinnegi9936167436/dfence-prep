@@ -95,7 +95,7 @@ export const metadata: Metadata = {
     site: '@dfenceprep',
   },
   verification: {
-    google: 'ADD_YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE_HERE',
+    google: 'I2eOgR-HgHWciAeXUXeTGC9uF-gQ6_3wW2BGfumWzAc',
   },
 }
 
