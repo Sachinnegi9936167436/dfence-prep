@@ -171,3 +171,14 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
+/* PWA mobile app native enhancements */
+@media (display-mode: standalone) {
+  body {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    /* Prevent default elastic scrolling in iOS (optional but recommended) */
+    overscroll-behavior-y: contain;
+  }
+}
+
+

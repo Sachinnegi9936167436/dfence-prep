@@ -43,6 +43,9 @@ export async function proxy(request: NextRequest) {
   return NextResponse.next();
 }
 
+// Next.js 16 requires a default export for adapterFn resolution
+export default proxy;
+
 export const config = {
   matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 };

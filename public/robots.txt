@@ -1,3 +1,7 @@
 User-agent: *
 Allow: /
-Sitemap: https://dfenceprep.vercel.app/sitemap.xml
+Disallow: /api/
+Disallow: /admin/
+Disallow: /dashboard/
+Sitemap: https://dfenceprep.com/sitemap.xml
+Host: https://dfenceprep.com

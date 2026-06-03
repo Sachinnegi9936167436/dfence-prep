@@ -34,13 +34,47 @@ interface CategoryPageProps {
 
 export async function generateMetadata({ params }: CategoryPageProps) {
   const { name } = await params;
+  const decodedName = decodeURIComponent(name);
+  const categoryDescriptions: Record<string, string> = {
+    Defence: 'Latest Indian defence news for exam preparation. Stay updated on Indian Army, Navy, Air Force, defence deals, and military exercises for CDS, NDA, and AFCAT exams.',
+    Sports: 'Latest sports news and updates for defence exam preparation. Important sporting events, awards, and records for CDS, NDA, and AFCAT.',
+    Awards: 'Latest awards and honours news for defence exam preparation. National awards, Padma awards, gallantry medals for CDS, NDA, and AFCAT.',
+    Books: 'Latest books and publications news for defence exam preparation. Important books and authors for CDS, NDA, and AFCAT exams.',
+    Exercises: 'Latest Indian military exercise news for defence exam preparation. Bilateral and multilateral military exercises for CDS, NDA, and AFCAT.',
+    'International Relations': 'Latest international relations news for defence exam preparation. Bilateral ties, treaties and summits for CDS, NDA, and AFCAT exams.',
+  };
+  const desc = categoryDescriptions[decodedName] || `Stay updated with the latest ${decodedName} news, analysis, and updates for defence exam preparation.`;
   return {
-    title: `${name} News - Dfence Prep`,
-    description: `Stay updated with the latest ${name} news, analysis, and updates for defense exam preparation.`,
+    title: `${decodedName} News for Defence Exam | Dfence Prep`,
+    description: desc,
+    keywords: [
+      decodedName,
+      `${decodedName} news`,
+      `${decodedName} defence exam`,
+      'defence exam',
+      'CDS',
+      'NDA',
+      'AFCAT',
+      'defence current affairs',
+      'defence news today',
+    ],
+    alternates: {
+      canonical: `https://dfenceprep.com/category/${encodeURIComponent(decodedName)}`,
+    },
     openGraph: {
-      title: `${name} News - Dfence Prep`,
-      description: `Stay updated with the latest ${name} news, analysis, and updates for defense exam preparation.`,
+      title: `${decodedName} News for Defence Exam | Dfence Prep`,
+      description: desc,
       type: 'website',
+      url: `https://dfenceprep.com/category/${encodeURIComponent(decodedName)}`,
+      siteName: 'Dfence Prep',
+      locale: 'en_IN',
+      images: [{ url: 'https://dfenceprep.com/hero-army.png', alt: 'Dfence Prep' }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${decodedName} News | Dfence Prep`,
+      description: desc,
+      images: ['https://dfenceprep.com/hero-army.png'],
     },
   };
 }
@@ -91,6 +125,32 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   return (
     <div className="space-y-12 relative pb-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@graph': [
+              {
+                '@type': 'CollectionPage',
+                '@id': `https://dfenceprep.com/category/${encodeURIComponent(categoryName)}`,
+                name: `${categoryName} News for Defence Exam`,
+                description: `Latest ${categoryName} news and updates for CDS, NDA, and AFCAT defence exam preparation.`,
+                url: `https://dfenceprep.com/category/${encodeURIComponent(categoryName)}`,
+                isPartOf: { '@id': 'https://dfenceprep.com/#website' },
+                inLanguage: 'en-IN',
+              },
+              {
+                '@type': 'BreadcrumbList',
+                itemListElement: [
+                  { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://dfenceprep.com' },
+                  { '@type': 'ListItem', position: 2, name: `${categoryName} News`, item: `https://dfenceprep.com/category/${encodeURIComponent(categoryName)}` },
+                ],
+              },
+            ],
+          }),
+        }}
+      />
       {/* Decorative Animated Background Blobs */}
       <div className="absolute top-0 -left-20 w-96 h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-float -z-10" style={{ animationDelay: '0s' }}></div>
       <div className="absolute top-40 -right-20 w-96 h-96 bg-indigo-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-float -z-10" style={{ animationDelay: '2s' }}></div>

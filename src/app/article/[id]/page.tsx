@@ -33,20 +33,49 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const article = await getArticle(id);
   if (!article) return { title: 'Article Not Found' };
 
+  const description = article.summary || article.content.substring(0, 160);
+  const canonicalUrl = `https://dfenceprep.com/article/${article._id}`;
+
   return {
-    title: article.title,
-    description: article.summary || article.content.substring(0, 150),
+    title: `${article.title} | Dfence Prep`,
+    description,
+    keywords: [
+      article.category,
+      'defence exam',
+      'defence news',
+      'CDS',
+      'NDA',
+      'AFCAT',
+      'defence current affairs',
+      article.title.split(' ').slice(0, 5).join(' '),
+    ],
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
     openGraph: {
       title: article.title,
-      description: article.summary || article.content.substring(0, 150),
-      images: article.imageUrl ? [{ url: article.imageUrl }] : [],
+      description,
+      type: 'article',
+      url: canonicalUrl,
+      siteName: 'Dfence Prep',
+      locale: 'en_IN',
+      publishedTime: article.publishedAt,
+      authors: ['https://dfenceprep.com'],
+      tags: [article.category, 'defence', 'defence exam', 'CDS', 'NDA', 'AFCAT'],
+      images: article.imageUrl
+        ? [{ url: article.imageUrl, alt: article.title }]
+        : [{ url: 'https://dfenceprep.com/hero-army.png', alt: 'Dfence Prep' }],
     },
     twitter: {
       card: 'summary_large_image',
       title: article.title,
-      description: article.summary || article.content.substring(0, 150),
-      images: article.imageUrl ? [article.imageUrl] : [],
-    }
+      description,
+      images: article.imageUrl ? [article.imageUrl] : ['https://dfenceprep.com/hero-army.png'],
+    },
   };
 }
 
@@ -67,8 +96,60 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@graph': [
+              {
+                '@type': 'NewsArticle',
+                '@id': `https://dfenceprep.com/article/${article._id}#article`,
+                headline: article.title,
+                description: article.summary || article.content.substring(0, 160),
+                image: article.imageUrl
+                  ? [article.imageUrl]
+                  : ['https://dfenceprep.com/hero-army.png'],
+                datePublished: article.publishedAt,
+                dateModified: article.publishedAt,
+                author: {
+                  '@type': 'Organization',
+                  name: 'Dfence Prep',
+                  url: 'https://dfenceprep.com',
+                },
+                publisher: {
+                  '@type': 'Organization',
+                  name: 'Dfence Prep',
+                  url: 'https://dfenceprep.com',
+                  logo: {
+                    '@type': 'ImageObject',
+                    url: 'https://dfenceprep.com/icon-192x192.png',
+                  },
+                },
+                mainEntityOfPage: {
+                  '@type': 'WebPage',
+                  '@id': `https://dfenceprep.com/article/${article._id}`,
+                },
+                articleSection: article.category,
+                keywords: `${article.category}, defence exam, defence news, CDS, NDA, AFCAT, defence current affairs`,
+                inLanguage: 'en-IN',
+                url: `https://dfenceprep.com/article/${article._id}`,
+              },
+              {
+                '@type': 'BreadcrumbList',
+                itemListElement: [
+                  { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://dfenceprep.com' },
+                  { '@type': 'ListItem', position: 2, name: `${article.category} News`, item: `https://dfenceprep.com/category/${encodeURIComponent(article.category)}` },
+                  { '@type': 'ListItem', position: 3, name: article.title, item: `https://dfenceprep.com/article/${article._id}` },
+                ],
+              },
+            ],
+          }),
+        }}
+      />
       <NavigationHeader session={session} />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 opacity-0 animate-fade-in-up">
+
         <Link href="/" className="inline-flex items-center text-sm font-bold text-blue-600 hover:text-blue-800 mb-8 transition-colors">
           &larr; Back to Command Center
         </Link>
